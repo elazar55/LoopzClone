@@ -1,7 +1,9 @@
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
+#include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 
 class Block : public sf::RectangleShape
 {
@@ -130,24 +132,23 @@ int main()
     sf::RenderWindow window(
         sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
 
-    Piece piece(sf::Vector2f(32, 96), sf::Vector2f(64, 64), Piece::Shapes::J);
+    Piece piece(sf::Vector2f(32, 32), sf::Vector2f(64, 64), Piece::Shapes::J);
     Block grid[GRID_X][GRID_Y] = {};
 
+    // ============================================================
+    // == Debug output
+    // ============================================================
     sf::Font font;
     font.loadFromFile("C:\\Windows\\Fonts\\consola.ttf");
-
     sf::Text text("Hello World!", font);
     text.setCharacterSize(24);
     text.setOutlineThickness(5);
     text.setOutlineColor(sf::Color::Black);
+    std::stringstream buffer;
 
-    float idx = -1;
-    float idy = -1;
-    char buffer[10];
-
-    // ------------------------------------------------------------
-    // -- Main loop
-    // ------------------------------------------------------------
+    // ============================================================
+    // == Game loop
+    // ============================================================
     while (window.isOpen())
     {
         sf::Event event;
@@ -181,11 +182,21 @@ int main()
                 }
             }
         }
-        idx = piece.getPositions().front().x / (WINDOW_WIDTH / GRID_X);
+
+        // ============================================================
+        // == Set debug output text
+        // ============================================================
+        buffer     = std::stringstream();
+        float PosX = piece.getPositions().front().x;
+        float PosY = piece.getPositions().front().y;
+        buffer << "X:\t\t" << PosX << std::endl;
+        buffer << "Y:\t\t" << PosY << std::endl;
+        buffer << "ID X:\t" << (int)(PosX / 64) << std::endl;
+        buffer << "ID Y:\t" << (int)(PosY / 64) << std::endl;
 
         window.clear();
         piece.draw(window);
-        text.setString(gcvt(idx, 5, buffer));
+        text.setString(buffer.str());
         window.draw(text);
         window.display();
     }
