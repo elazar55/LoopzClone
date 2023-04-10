@@ -123,13 +123,15 @@ int main()
     // Parameters
     const int WINDOW_WIDTH  = 640;
     const int WINDOW_HEIGHT = 480;
+    const size_t GRID_X     = 18;
+    const size_t GRID_Y     = 7;
 
     // Main GUI window
     sf::RenderWindow window(
         sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
 
     Piece piece(sf::Vector2f(32, 96), sf::Vector2f(64, 64), Piece::Shapes::J);
-    Block grid[18][7] = {};
+    Block grid[GRID_X][GRID_Y] = {};
 
     sf::Font font;
     font.loadFromFile("C:\\Windows\\Fonts\\consola.ttf");
@@ -157,19 +159,19 @@ int main()
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Key::W:
-                        piece.move(sf::Vector2f(0, -WINDOW_HEIGHT / 10));
+                        piece.move(sf::Vector2f(0, -64));
                         break;
 
                     case sf::Keyboard::Key::R:
-                        piece.move(sf::Vector2f(0, WINDOW_HEIGHT / 10));
+                        piece.move(sf::Vector2f(0, 64));
                         break;
 
                     case sf::Keyboard::Key::A:
-                        piece.move(sf::Vector2f(-WINDOW_WIDTH / 10, 0));
+                        piece.move(sf::Vector2f(-64, 0));
                         break;
 
                     case sf::Keyboard::Key::S:
-                        piece.move(sf::Vector2f(WINDOW_WIDTH / 10, 0));
+                        piece.move(sf::Vector2f(64, 0));
                         break;
                     case sf::Keyboard::Key::Q: piece.rotate(); break;
 
@@ -179,7 +181,7 @@ int main()
                 }
             }
         }
-        idx = piece.getPositions().front().x / (WINDOW_WIDTH / 10);
+        idx = piece.getPositions().front().x / (WINDOW_WIDTH / GRID_X);
 
         window.clear();
         piece.draw(window);
