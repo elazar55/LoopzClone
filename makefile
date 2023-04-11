@@ -1,26 +1,42 @@
 #############################################################
 #  Variables
 #############################################################
-CPPFLAGS =#			 Flags to give to the C preprocessor
-CXX      = g++#		 Program for compiling C++ programs; default g++
-CC       = g++#		 Program for compiling C programs; default cc
-CXXFLAGS = -Wall -g# Flags to give to the C++ compiler
+CPPFLAGS =#		Flags for the C preprocessor
+CXX      = g++#	Program for compiling C++ programs; default g++
+CC       = g++#	Program for compiling C programs; default cc
+CXXFLAGS =# 	Flags for the C++ compiler
 
-# Flags to give to compilers when they are supposed to invoke the linker
+# Flags for compilers when they invoke the linker
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
-SRCS = src/$(wildcard *.cpp)# 				Finds all .cpp files
-OBJS = $(patsubst %.cpp,%.o,$(SRCS))#	Replaces .cpp with .o
+BUILD_DIR = build#	Directory where build files go
+SRC_DIR   = src#	Directory where the source files are
+
+# Finds all .cpp files in ./src/
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+
+# Replaces .cpp with .o and SRC_DIR with BUILD_DIR
+OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
 #############################################################
 #  Build Targets
 #############################################################
-Main: $(OBJS)
+
+# Links all .o files in BUILD_DIR
+$(BUILD_DIR)/Main: $(BUILD_DIR) $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
 
-%.o: %.cpp
+# Compiles every source file into .o files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# Creates BUILD_DIR if it doesn't exist
+$(BUILD_DIR):
+	mkdir $(BUILD_DIR)
+
+test:
+	@echo $(SRCS)
+	@echo $(OBJS)
+
 clean:
-	del *.exe
-	del *.o
+	del $(BUILD_DIR) /Q

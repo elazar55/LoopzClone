@@ -15,7 +15,7 @@ class Block : public sf::RectangleShape
         bool doors[4];
 
     public:
-        Block() : doors() {}
+        Block();
 
         Block(sf::Vector2f& size) : doors(), sf::RectangleShape(size) {}
 
