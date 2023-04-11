@@ -1,5 +1,0 @@
-{
-    "code-runner.executorMap": {
-        "cpp": "cd $dir && g++ $fileName -o $fileNameWithoutExt.exe -lsfml-graphics -lsfml-window -lsfml-system && $dir$fileNameWithoutExt.exe"
-    }
-}
