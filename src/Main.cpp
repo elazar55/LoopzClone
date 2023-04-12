@@ -1,6 +1,6 @@
-//////////////////////////////////////////////////////////////
+//============================================================
 // Headers
-//////////////////////////////////////////////////////////////
+//============================================================
 #include "Piece.h"
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
@@ -9,9 +9,9 @@
 #include <stdlib.h>
 #include <string>
 
-//////////////////////////////////////////////////////////////
+//============================================================
 // Main
-//////////////////////////////////////////////////////////////
+//============================================================
 int main()
 {
     // Parameters
@@ -23,12 +23,12 @@ int main()
     // Main GUI window
     sf::RenderWindow window(
         sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
+
+    // Game Objects
     Piece piece(sf::Vector2f(32, 32), sf::Vector2f(64, 64), Piece::Shapes::J);
     Block grid[GRID_X][GRID_Y] = {};
 
-    //////////////////////////////////////////////////////////////
     // Debug text
-    //////////////////////////////////////////////////////////////
     sf::Font font;
     font.loadFromFile("C:\\Windows\\Fonts\\consola.ttf");
     sf::Text text("Hello World!", font);
@@ -37,12 +37,13 @@ int main()
     text.setOutlineColor(sf::Color::Black);
     std::stringstream buffer;
 
-    //////////////////////////////////////////////////////////////
+    //============================================================
     // Game loop
-    //////////////////////////////////////////////////////////////
+    //============================================================
     while (window.isOpen())
     {
         sf::Event event;
+
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed) window.close();
@@ -68,9 +69,8 @@ int main()
                 }
             }
         }
-        //////////////////////////////////////////////////////////////
+
         // Set debug text
-        //////////////////////////////////////////////////////////////
         buffer     = std::stringstream();
         float PosX = piece.getPositions().front().x;
         float PosY = piece.getPositions().front().y;
@@ -78,6 +78,8 @@ int main()
         buffer << "Y:\t\t" << PosY << std::endl;
         buffer << "ID X:\t" << (int)(PosX / 64) << std::endl;
         buffer << "ID Y:\t" << (int)(PosY / 64) << std::endl;
+
+        // Draw
         window.clear();
         piece.draw(window);
         text.setString(buffer.str());

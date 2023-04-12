@@ -1,10 +1,10 @@
 #############################################################
-#  Variables
+# Variables
 #############################################################
-CPPFLAGS =#		Flags for the C preprocessor
-CXX      = g++#	Program for compiling C++ programs; default g++
-CC       = g++#	Program for compiling C programs; default cc
-CXXFLAGS =# 	Flags for the C++ compiler
+CPPFLAGS =#			Flags for the C preprocessor
+CXX      = g++#		Program for compiling C++ programs; default g++
+CC       = gcc#		Program for compiling C programs; default cc
+CXXFLAGS =-Wall#	Flags for the C++ compiler
 
 # Flags for compilers when they invoke the linker
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
@@ -19,12 +19,12 @@ SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
 #############################################################
-#  Build Targets
+# Build Targets
 #############################################################
 
 # Links all .o files in BUILD_DIR
 $(BUILD_DIR)/Main: $(BUILD_DIR) $(OBJS)
-	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 # Compiles every source file into .o files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
