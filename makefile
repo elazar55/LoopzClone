@@ -39,4 +39,4 @@ test:
 	@echo $(OBJS)
 
 clean:
-	del $(BUILD_DIR) /Q
+	rm -rf $(BUILD_DIR)/*
