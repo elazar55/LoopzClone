@@ -9,7 +9,7 @@ CXXFLAGS =-Wall#	Flags for the C++ compiler
 # Flags for compilers when they invoke the linker
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
-BUILD_DIR = build#	Directory where build files go
+BUILD_DIR = bin#	Directory where build files go
 SRC_DIR   = src#	Directory where the source files are
 
 # Finds all .cpp files in ./src/
@@ -18,12 +18,21 @@ SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 # Replaces .cpp with .o and SRC_DIR with BUILD_DIR
 OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
+# Executable extension
+ifeq ($(OS),Windows_NT)
+	EXT = .exe
+endif
+
+# Final executable which is the name of the parent folder + /build
+EXE = $(BUILD_DIR)/$(notdir $(shell pwd))$(EXT)
+
 #############################################################
 # Build Targets
 #############################################################
+all: $(EXE)
 
 # Links all .o files in BUILD_DIR
-$(BUILD_DIR)/Main: $(BUILD_DIR) $(OBJS)
+$(EXE): $(BUILD_DIR) $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 # Compiles every source file into .o files
@@ -35,8 +44,14 @@ $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
 
 test:
-	@echo $(SRCS)
-	@echo $(OBJS)
+	@printf "Source files:\n"
+	@printf "%s\n" $(SRCS)
+	@printf "\nObject files:\n"
+	@printf "%s\n" $(OBJS)
+	@printf "\nExecutable:\n"
+	@printf "%s\n" $(EXE)
+	@printf "\nOperating System:\n"
+	@printf "%s\n" $(OS)
 
 clean:
-	rm -rf $(BUILD_DIR)/*
+	rm -rf $(BUILD_DIR)/
