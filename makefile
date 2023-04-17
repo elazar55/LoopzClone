@@ -15,6 +15,9 @@ SRC_DIR   = src#	Directory where the source files are
 # Finds all .cpp files in ./src/
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 
+# Finds all .h files in ./src/
+HEADS = $(wildcard $(SRC_DIR)/*.h)
+
 # Replaces .cpp with .o and SRC_DIR with BUILD_DIR
 OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
@@ -32,7 +35,8 @@ EXE = $(BUILD_DIR)/$(notdir $(shell pwd))$(EXT)
 all: $(EXE)
 
 # Links all .o files in BUILD_DIR
-$(EXE): $(BUILD_DIR) $(OBJS)
+# Header files included only for recompiling changes
+$(EXE): $(BUILD_DIR) $(OBJS) $(HEADS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 # Compiles every source file into .o files
@@ -46,6 +50,8 @@ $(BUILD_DIR):
 test:
 	@printf "Source files:\n"
 	@printf "%s\n" $(SRCS)
+	@printf "\nHeader files:\n"
+	@printf "%s\n" $(HEADS)
 	@printf "\nObject files:\n"
 	@printf "%s\n" $(OBJS)
 	@printf "\nExecutable:\n"
