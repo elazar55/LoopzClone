@@ -1,6 +1,7 @@
 //============================================================
 // Headers
 //============================================================
+#include "Board.h"
 #include "Piece.h"
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
@@ -17,73 +18,46 @@ int main()
     // Parameters
     const int WINDOW_WIDTH  = 640;
     const int WINDOW_HEIGHT = 480;
-    const size_t GRID_X     = 18;
-    const size_t GRID_Y     = 7;
+    // const int GRID_WIDTH    = 18;
+    // const int GRID_HEIGHT   = 7;
+    const int BLOCK_SIZE = 64;
 
     // Main GUI window
     sf::RenderWindow window(
         sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
 
-    // Game Objects
-    Piece piece(sf::Vector2f(32, 32), sf::Vector2f(64, 64), Piece::Shapes::J);
-    Block grid[GRID_X][GRID_Y] = {};
+    // Game objects
+    Piece piece(0, 0, BLOCK_SIZE, Piece::Mino::L);
 
-    // Debug text
-    sf::Font font;
-    font.loadFromFile("C:\\Windows\\Fonts\\consola.ttf");
-    sf::Text text("Hello World!", font);
-    text.setCharacterSize(24);
-    text.setOutlineThickness(5);
-    text.setOutlineColor(sf::Color::Black);
-    std::stringstream buffer;
-
-    //============================================================
     // Game loop
-    //============================================================
     while (window.isOpen())
     {
         sf::Event event;
 
+        // Event queue
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed) window.close();
-            if (event.type == sf::Event::KeyPressed)
+            if (event.type == event.KeyPressed)
             {
                 switch (event.key.code)
                 {
-                    case sf::Keyboard::Key::W:
-                        piece.move(sf::Vector2f(0, -64));
-                        break;
-                    case sf::Keyboard::Key::R:
-                        piece.move(sf::Vector2f(0, 64));
-                        break;
-                    case sf::Keyboard::Key::A:
-                        piece.move(sf::Vector2f(-64, 0));
-                        break;
-                    case sf::Keyboard::Key::S:
-                        piece.move(sf::Vector2f(64, 0));
-                        break;
-                    case sf::Keyboard::Key::Q: piece.rotate(); break;
-                    case sf::Keyboard::Key::Escape: window.close(); break;
+                    case sf::Keyboard::Escape: window.close(); break;
+                    case sf::Keyboard::W: piece.move(0, -BLOCK_SIZE); break;
+                    case sf::Keyboard::R: piece.move(0, BLOCK_SIZE); break;
+                    case sf::Keyboard::S: piece.move(BLOCK_SIZE, 0); break;
+                    case sf::Keyboard::A: piece.move(-BLOCK_SIZE, 0); break;
+                    case sf::Keyboard::Q: piece.rotate(90); break;
+                    case sf::Keyboard::F: piece.rotate(-90); break;
+
                     default: break;
                 }
             }
         }
 
-        // Set debug text
-        buffer     = std::stringstream();
-        float PosX = piece.getPositions().front().x;
-        float PosY = piece.getPositions().front().y;
-        buffer << "X:\t\t" << PosX << std::endl;
-        buffer << "Y:\t\t" << PosY << std::endl;
-        buffer << "ID X:\t" << (int)(PosX / 64) << std::endl;
-        buffer << "ID Y:\t" << (int)(PosY / 64) << std::endl;
-
         // Draw
         window.clear();
         piece.draw(window);
-        text.setString(buffer.str());
-        window.draw(text);
         window.display();
     }
     return EXIT_SUCCESS;

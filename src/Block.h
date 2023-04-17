@@ -2,28 +2,22 @@
 #define BLOCK_H
 #include <SFML/Graphics.hpp>
 
-//============================================================
-// Block
-//============================================================
-class Block : public sf::RectangleShape
+class Block
 {
     private:
-        //============================================================
-        // Members
-        //============================================================
+        int x;
+        int y;
         bool doors[4];
+        sf::RectangleShape shape;
 
     public:
-        //============================================================
-        // Constructor
-        //============================================================
-        Block();
-        Block(sf::Vector2f& size);
+        Block() = default;
+        Block(int x, int y, int size);
 
-        //============================================================
-        // Functions
-        //============================================================
-        void rotate(float degrees);
+        sf::Vector2i getPosition();
+        void move(int x, int y);
+        void rotate(float degrees, sf::Vector2i& origin);
+        void draw(sf::RenderWindow& window);
 };
 
 #endif
