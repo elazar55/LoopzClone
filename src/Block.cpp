@@ -78,3 +78,15 @@ void Block::draw(sf::RenderWindow& window)
 {
     window.draw(shape);
 }
+
+// TODO: Dot Product
+int Dot(std::vector<int> a, std::vector<int> b)
+{
+    unsigned short sizeA = a.size();
+    unsigned short sizeB = b.size();
+    int result           = 0;
+
+    // TODO: Accumlate result
+
+    return 0;
+}
