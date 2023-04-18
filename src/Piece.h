@@ -14,13 +14,14 @@ class Piece
         std::vector<Block> blocks;
 
     public:
-        enum Mino { Single, I, L, J, U, NUM_SHAPES };
+        enum Mino { Single, S, Z, Line, L, J, U, BigZ, NUM_SHAPES };
 
-        Piece(int x, int y, int size, Mino mino);
+        Piece(int x, int y, int size, const Mino mino);
 
         void draw(sf::RenderWindow& window);
         void move(int x, int y);
         void rotate(int degrees);
+        void ConstructMino(int x, int y, int size, const Piece::Mino mino);
 };
 
 #endif
