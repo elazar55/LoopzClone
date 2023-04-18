@@ -1,7 +1,13 @@
+/* ========================================================================== */
+/*                                   Headers                                  */
+/* ========================================================================== */
 #include "Block.h"
 #include <cmath>
 #include <stdlib.h>
 
+/* ========================================================================== */
+/*                                 Constructor                                */
+/* ========================================================================== */
 Block::Block(int x, int y, int size) :
     x(x), y(y), doors{true}, shape(sf::Vector2f(size, size))
 {
@@ -23,6 +29,9 @@ void Block::move(int x, int y)
     shape.setPosition(sf::Vector2f(this->x, this->y));
 }
 
+/* ========================================================================== */
+/*                                   Rotate                                   */
+/* ========================================================================== */
 void Block::rotate(float degrees, sf::Vector2i& origin)
 {
     const double PI = 3.13159265358979323;
@@ -60,10 +69,11 @@ void Block::rotate(float degrees, sf::Vector2i& origin)
         doors[i] = (copy[0] * matrix[0][j]) + (copy[1] * matrix[1][j]) +
                    (copy[2] * matrix[2][j]) + (copy[3] * matrix[3][j]);
     }
-
-    printf("[%i %i %i %i]\n", doors[0], doors[1], doors[2], doors[3]);
 }
 
+/* ========================================================================== */
+/*                                    Draw                                    */
+/* ========================================================================== */
 void Block::draw(sf::RenderWindow& window)
 {
     window.draw(shape);

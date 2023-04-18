@@ -1,6 +1,6 @@
-#############################################################
-# Variables
-#############################################################
+# ============================================================================ #
+#                                   Variables                                  #
+# ============================================================================ #
 CPPFLAGS =#			Flags for the C preprocessor
 CXX      = g++#		Program for compiling C++ programs; default g++
 CC       = gcc#		Program for compiling C programs; default cc
@@ -9,29 +9,24 @@ CXXFLAGS =-Wall#	Flags for the C++ compiler
 # Flags for compilers when they invoke the linker
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
-BUILD_DIR = bin#	Directory where build files go
-SRC_DIR   = src#	Directory where the source files are
-
-# Finds all .cpp files in ./src/
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
-
-# Finds all .h files in ./src/
-HEADS = $(wildcard $(SRC_DIR)/*.h)
+BUILD_DIR = bin#							Directory where build files go
+SRC_DIR   = src#							Directory where the source files are
+SRCS      = $(wildcard $(SRC_DIR)/*.cpp)#	Finds all .cpp files in ./src/
+HEADS     = $(wildcard $(SRC_DIR)/*.h)#		Finds all .h files in ./src/
 
 # Replaces .cpp with .o and SRC_DIR with BUILD_DIR
 OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
-# Executable extension
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS),Windows_NT)# Executable extension
 	EXT = .exe
 endif
 
-# Final executable which is the name of the parent folder + /build
+# Final executable target which is the name of the parent folder + $(BUILD_DIR)
 EXE = $(BUILD_DIR)/$(notdir $(shell pwd))$(EXT)
 
-#############################################################
-# Build Targets
-#############################################################
+# ============================================================================ #
+#                                 Build Targets                                #
+# ============================================================================ #
 all: $(EXE)
 
 # Links all .o files in BUILD_DIR
