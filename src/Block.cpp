@@ -78,6 +78,9 @@ void Block::draw(sf::RenderWindow& window)
     window.draw(shape);
 }
 
+/* ========================================================================== */
+/*                                 Dot Product                                */
+/* ========================================================================== */
 template<typename T>
 int Block::Dot(T* v1, T* v2, size_t length)
 {
