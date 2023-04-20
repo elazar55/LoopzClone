@@ -2,6 +2,7 @@
 /*                                   Headers                                  */
 /* ========================================================================== */
 #include "Block.h"
+#include <cassert>
 #include <cmath>
 #include <stdlib.h>
 
@@ -34,7 +35,7 @@ void Block::move(int x, int y)
 /* ========================================================================== */
 void Block::rotate(float degrees, sf::Vector2i& origin)
 {
-    const double PI = 3.13159265358979323;
+    const double PI = 3.141592653589793238;
     double radians  = degrees * PI / 180.f;
     double sinTheta = std::round(std::sin(radians));
     double cosTheta = std::round(std::cos(radians));
@@ -50,24 +51,22 @@ void Block::rotate(float degrees, sf::Vector2i& origin)
 
     shape.setPosition(sf::Vector2f(x, y));
 
-    bool copy[4];
-    for (size_t i = 0; i < sizeof(doors); i++) copy[i] = doors[i];
-
+    // Rotate doors now
     bool matrix[4][4] = {
         {1, 0, 0, 0},
         {0, 1, 0, 0},
         {0, 0, 1, 0},
         {0, 0, 0, 1},
     };
+    static_assert(sizeof(doors) == sizeof(matrix[0]));
 
     for (size_t i = 0; i < sizeof(doors); i++)
     {
         int j = i + sinTheta;
         if (j == 4) j = 0;
-        if (j == -1) j = 3;
+        else if (j == -1) j = 3;
 
-        doors[i] = (copy[0] * matrix[0][j]) + (copy[1] * matrix[1][j]) +
-                   (copy[2] * matrix[2][j]) + (copy[3] * matrix[3][j]);
+        doors[i] = Dot(doors, matrix[j], sizeof(doors));
     }
 }
 
@@ -79,14 +78,12 @@ void Block::draw(sf::RenderWindow& window)
     window.draw(shape);
 }
 
-// TODO: Dot Product
-int Dot(std::vector<int> a, std::vector<int> b)
+template<typename T>
+int Block::Dot(T* v1, T* v2, size_t length)
 {
-    unsigned short sizeA = a.size();
-    unsigned short sizeB = b.size();
-    int result           = 0;
+    T result{};
 
-    // TODO: Accumlate result
+    for (size_t i = 0; i < length; i++) result += (v1[i] * v2[i]);
 
-    return 0;
+    return result;
 }

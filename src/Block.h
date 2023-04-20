@@ -24,6 +24,9 @@ class Block
         void move(int x, int y);
         void rotate(float degrees, sf::Vector2i& origin);
         void draw(sf::RenderWindow& window);
+
+        template<typename T>
+        int Dot(T* a, T* b, size_t length);
 };
 
 #endif
