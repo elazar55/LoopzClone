@@ -33,7 +33,8 @@ all: $(EXE)
 $(EXE): $(BUILD_DIR) $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
-# Compiles every source file into .o files
+# Compiles every source file into .o files and generates dependency files to
+# trigger recompilation if headers change.
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
@@ -56,4 +57,7 @@ test:
 clean:
 	rm -rf $(BUILD_DIR)/
 
+# Include the .d makefiles. The - at the front suppresses the errors of missing
+# Makefiles. Initially, all the .d files will be missing, and we don't want
+# those errors to show up
 -include $(DEPS)
