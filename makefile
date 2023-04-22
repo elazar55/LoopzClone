@@ -12,10 +12,10 @@ LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 BUILD_DIR = bin#							Directory where build files go
 SRC_DIR   = src#							Directory where the source files are
 SRCS      = $(wildcard $(SRC_DIR)/*.cpp)#	Finds all .cpp files in ./src/
-HEADS     = $(wildcard $(SRC_DIR)/*.h)#		Finds all .h files in ./src/
 
 # Replaces .cpp with .o and SRC_DIR with BUILD_DIR
 OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
+DEPS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.d,$(SRCS))
 
 ifeq ($(OS),Windows_NT)# Executable extension
 	EXT = .exe
@@ -30,13 +30,12 @@ EXE = $(BUILD_DIR)/$(notdir $(shell pwd))$(EXT)
 all: $(EXE)
 
 # Links all .o files in BUILD_DIR
-# Header files included only for recompiling changes
-$(EXE): $(BUILD_DIR) $(OBJS) $(HEADS)
+$(EXE): $(BUILD_DIR) $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 # Compiles every source file into .o files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
 # Creates BUILD_DIR if it doesn't exist
 $(BUILD_DIR):
@@ -45,10 +44,10 @@ $(BUILD_DIR):
 test:
 	@printf "Source files:\n"
 	@printf "%s\n" $(SRCS)
-	@printf "\nHeader files:\n"
-	@printf "%s\n" $(HEADS)
 	@printf "\nObject files:\n"
 	@printf "%s\n" $(OBJS)
+	@printf "\nDepend files:\n"
+	@printf "%s\n" $(DEPS)
 	@printf "\nExecutable:\n"
 	@printf "%s\n" $(EXE)
 	@printf "\nOperating System:\n"
@@ -56,3 +55,5 @@ test:
 
 clean:
 	rm -rf $(BUILD_DIR)/
+
+-include $(DEPS)
