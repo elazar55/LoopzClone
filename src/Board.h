@@ -6,14 +6,21 @@ class Board
 {
     private:
         // Members
-        const size_t WIDTH;
-        const size_t HEIGHT;
-        std::vector<std::vector<Block>> grid;
+        const int gridWidth;
+        const int gridHeight;
+        Vector2i position;
+        const int sizeX;
+        const int sizeY;
+        VertexArray horizontalLines;
+        VertexArray verticalLines;
+        vector<vector<Block>> grid;
 
     public:
-        Board(size_t width, size_t height);
+        Board(size_t gridWidth, size_t gridHeight, Vector2i position, int sizeX,
+            int sizeY);
 
         void PushPiece(Piece& piece);
+        void draw(RenderWindow& window);
 };
 
 #endif

@@ -18,16 +18,18 @@ int main()
     // Parameters
     const int WINDOW_WIDTH  = 640;
     const int WINDOW_HEIGHT = 480;
-    // const int GRID_WIDTH    = 18;
-    // const int GRID_HEIGHT   = 7;
-    const int BLOCK_SIZE = 64;
+    const int GRID_WIDTH    = 18;
+    const int GRID_HEIGHT   = 7;
+    const int BLOCK_SIZE    = 32;
 
     // Main GUI window
     sf::RenderWindow window(
         sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
 
     // Game objects
-    Piece piece(0, 0, BLOCK_SIZE, Piece::Mino::L);
+    Board board(GRID_WIDTH, GRID_HEIGHT, Vector2i(20, 20),
+        BLOCK_SIZE * GRID_WIDTH, BLOCK_SIZE * GRID_HEIGHT);
+    Piece piece(20, 20, BLOCK_SIZE, Piece::Mino::L);
 
     // Game loop
     while (window.isOpen())
@@ -49,6 +51,7 @@ int main()
                     case sf::Keyboard::A: piece.move(-BLOCK_SIZE, 0); break;
                     case sf::Keyboard::Q: piece.rotate(90); break;
                     case sf::Keyboard::F: piece.rotate(-90); break;
+                    case sf::Keyboard::Space: board.PushPiece(piece); break;
 
                     default: break;
                 }
@@ -58,6 +61,7 @@ int main()
         // Draw
         window.clear();
         piece.draw(window);
+        board.draw(window);
         window.display();
     }
     return EXIT_SUCCESS;
