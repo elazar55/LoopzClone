@@ -62,22 +62,50 @@ void Piece::ConstructMino(int x, int y, int size, const Piece::Mino mino)
     }
 }
 
-void Piece::draw(sf::RenderWindow& window)
+/* ========================================================================== */
+/*                                    Draw                                    */
+/* ========================================================================== */
+void Piece::draw(RenderWindow& window)
 {
     // Forwards to individual blocks
     for (auto& i : blocks) i.draw(window);
 }
 
+/* ========================================================================== */
+/*                                    Move                                    */
+/* ========================================================================== */
 void Piece::move(int x, int y)
 {
     // Forwards to individual blocks
     for (auto&& i : blocks) i.move(x, y);
 }
 
+/* ========================================================================== */
+/*                                   Rotate                                   */
+/* ========================================================================== */
 void Piece::rotate(int degrees)
 {
     // Forwards to individual blocks
-    sf::Vector2i origin = blocks[0].getPosition();
+    Vector2i origin = blocks[0].getPosition();
 
     for (auto&& i : blocks) i.rotate(degrees, origin);
+}
+
+/* ========================================================================== */
+/*                                Get Positions                               */
+/* ========================================================================== */
+vector<Vector2i> Piece::getPositions()
+{
+    vector<Vector2i> positions;
+    for (auto& i : blocks) positions.push_back(i.getPosition());
+
+    return positions;
+}
+
+/* ========================================================================== */
+/*                                 Get Blocks                                 */
+/* ========================================================================== */
+vector<Block> Piece::getBlocks()
+{
+    return blocks;
 }
