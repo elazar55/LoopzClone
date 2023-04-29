@@ -14,14 +14,17 @@ class Block
     private:
         int x;
         int y;
+        int xIndex;
+        int yIndex;
         bool doors[4];
         sf::RectangleShape shape;
 
     public:
-        Block() = default;
+        Block();
         Block(int x, int y, int size);
 
-        sf::Vector2i getPosition();
+        Vector2i getPosition();
+        Vector2i getIndices();
         void move(int x, int y);
         void rotate(float degrees, sf::Vector2i& origin);
         void draw(sf::RenderWindow& window);

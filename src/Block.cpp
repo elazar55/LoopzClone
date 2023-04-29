@@ -9,11 +9,15 @@ using namespace std;
 using namespace sf;
 
 /* ========================================================================== */
-/*                                 Constructor                                */
+/*                                Constructors                                */
 /* ========================================================================== */
+Block::Block() : x(INT_MAX), y(INT_MAX), doors{false} {}
+
 Block::Block(int x, int y, int size) :
     x(x), y(y), doors{true}, shape(sf::Vector2f(size, size))
 {
+    xIndex = x / size;
+    yIndex = y / size;
     shape.setPosition(sf::Vector2f(x, y));
     shape.setFillColor(sf::Color::Green);
     shape.setOutlineColor(sf::Color::Blue);
@@ -43,6 +47,8 @@ void Block::move(int x, int y)
 {
     this->x += x;
     this->y += y;
+    xIndex  += x / shape.getSize().x;
+    yIndex  += x / shape.getSize().y;
     shape.setPosition(sf::Vector2f(this->x, this->y));
 }
 
