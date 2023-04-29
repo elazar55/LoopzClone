@@ -4,6 +4,7 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 #include <SFML/Graphics.hpp>
+using namespace sf;
 
 /* ========================================================================== */
 /*                                 Class Block                                */

@@ -2,6 +2,8 @@
 /*                                   Headers                                  */
 /* ========================================================================== */
 #include "Piece.h"
+using namespace std;
+using namespace sf;
 
 /* ========================================================================== */
 /*                                 Constructor                                */
@@ -16,7 +18,7 @@ Piece::Piece(int x, int y, int size, const Mino mino)
 /* ========================================================================== */
 void Piece::ConstructMino(int x, int y, int size, const Piece::Mino mino)
 {
-    if (mino == Piece::Single)
+    if (mino == Single)
     {
         blocks.push_back(Block(x, y, size));
     }
@@ -32,30 +34,30 @@ void Piece::ConstructMino(int x, int y, int size, const Piece::Mino mino)
         blocks.push_back(Block(x - size, y - size, size));
         blocks.push_back(Block(x + size, y, size));
     }
-    else if (mino == Piece::Line)
+    else if (mino == Line)
     {
         blocks.push_back(Block(x, y, size));
         blocks.push_back(Block(x, y + size, size));
         blocks.push_back(Block(x, y - size, size));
     }
-    else if (mino == Piece::J)
+    else if (mino == J)
     {
-        ConstructMino(x, y, size, Piece::Line);
+        ConstructMino(x, y, size, Line);
         blocks.push_back(Block(x + size, y + size, size));
     }
-    else if (mino == Piece::L)
+    else if (mino == L)
     {
-        ConstructMino(x, y, size, Piece::Line);
+        ConstructMino(x, y, size, Line);
         blocks.push_back(Block(x - size, y + size, size));
     }
-    else if (mino == Piece::U)
+    else if (mino == U)
     {
-        ConstructMino(x, y, size, Piece::J);
+        ConstructMino(x, y, size, J);
         blocks.push_back(Block(x + size, y - size, size));
     }
-    else if (mino == Piece::BigZ)
+    else if (mino == BigZ)
     {
-        ConstructMino(x, y, size, Piece::J);
+        ConstructMino(x, y, size, J);
         blocks.push_back(Block(x - size, y - size, size));
     }
 }

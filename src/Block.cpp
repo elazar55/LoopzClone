@@ -4,7 +4,9 @@
 #include "Block.h"
 #include <cassert>
 #include <cmath>
-#include <stdlib.h>
+#include <iostream>
+using namespace std;
+using namespace sf;
 
 /* ========================================================================== */
 /*                                 Constructor                                */
