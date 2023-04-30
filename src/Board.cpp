@@ -3,7 +3,7 @@
 using namespace std;
 
 Board::Board(size_t gridWidth, size_t gridHeight, Vector2i pos, int sizeX,
-    int sizeY) :
+             int sizeY) :
     gridWidth(gridWidth),
     gridHeight(gridHeight),
     pos(pos),
@@ -31,11 +31,30 @@ Board::Board(size_t gridWidth, size_t gridHeight, Vector2i pos, int sizeX,
 
 void Board::PushPiece(Piece& piece)
 {
-    //
+    for (auto&& i : piece.getBlocks())
+    {
+        int xIndex = i.getPosition().x / i.getSize().x;
+        int yIndex = i.getPosition().y / i.getSize().y;
+
+        grid[yIndex][xIndex] =
+            Block(i.getPosition().x, i.getPosition().y, i.getSize().x);
+
+        cout << "X Index: " << xIndex << " Y Index: " << yIndex << endl;
+    }
+    // TODO: Compensate for grid location
+    // TODO: Refactor Block parameters
 }
 
 void Board::draw(RenderWindow& window)
 {
-    window.draw(horizontalLines);
-    window.draw(verticalLines);
+    window.draw(hLines);
+    window.draw(vLines);
+
+    for (size_t y = 0; y < grid.size(); y++)
+    {
+        for (size_t x = 0; x < grid.back().size(); x++)
+        {
+            if (grid[y][x].getPosition().x != INT_MAX) grid[y][x].draw(window);
+        }
+    }
 }
