@@ -3,12 +3,8 @@
 /* ========================================================================== */
 #include "Board.h"
 #include "Piece.h"
-#include <cstdlib>
+#include <iostream>
 #include <SFML/Graphics.hpp>
-#include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
 
 /* ========================================================================== */
 /*                                    Main                                    */
@@ -23,12 +19,12 @@ int main()
     const int BLOCK_SIZE    = 32;
 
     // Main GUI window
-    sf::RenderWindow window(
-        sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
+                            "SFML works!");
 
     // Game objects
     Board board(GRID_WIDTH, GRID_HEIGHT, Vector2i(20, 20),
-        BLOCK_SIZE * GRID_WIDTH, BLOCK_SIZE * GRID_HEIGHT);
+                BLOCK_SIZE * GRID_WIDTH, BLOCK_SIZE * GRID_HEIGHT);
     Piece piece(20, 20, BLOCK_SIZE, Piece::Mino::L);
 
     // Game loop
