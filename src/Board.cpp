@@ -1,7 +1,13 @@
+/* ========================================================================== */
+/*                                   Headers                                  */
+/* ========================================================================== */
 #include "Board.h"
 #include <iostream>
 using namespace std;
 
+/* ========================================================================== */
+/*                                 Constructor                                */
+/* ========================================================================== */
 Board::Board(size_t gridWidth, size_t gridHeight, Vector2i pos, int sizeX,
              int sizeY) :
     gridWidth(gridWidth),
@@ -29,6 +35,9 @@ Board::Board(size_t gridWidth, size_t gridHeight, Vector2i pos, int sizeX,
     }
 }
 
+/* ========================================================================== */
+/*                                 Push Piece                                 */
+/* ========================================================================== */
 void Board::PushPiece(Piece& piece)
 {
     for (auto&& i : piece.getBlocks())
@@ -45,6 +54,9 @@ void Board::PushPiece(Piece& piece)
     // TODO: Refactor Block parameters
 }
 
+/* ========================================================================== */
+/*                                    Draw                                    */
+/* ========================================================================== */
 void Board::draw(RenderWindow& window)
 {
     window.draw(hLines);
