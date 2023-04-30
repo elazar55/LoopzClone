@@ -33,9 +33,13 @@ Vector2i Block::getPosition()
     return Vector2i(x, y);
 }
 
+/* ========================================================================== */
+/*                                  Get Size                                  */
+/* ========================================================================== */
 Vector2i Block::getSize()
 {
-    return Vector2i(xIndex, yIndex);
+    return static_cast<Vector2i>(shape.getSize());
+    // TODO: Change type to Vector2f
 }
 
 /* ========================================================================== */

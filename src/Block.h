@@ -14,8 +14,6 @@ class Block
     private:
         int x;
         int y;
-        int xIndex;
-        int yIndex;
         bool doors[4];
         RectangleShape shape;
 
@@ -24,7 +22,7 @@ class Block
         Block(int x, int y, int size);
 
         Vector2i getPosition();
-        Vector2i getIndices();
+        Vector2i getSize();
         void move(int x, int y);
         void rotate(float degrees, Vector2i& origin);
         void draw(RenderWindow& window);
