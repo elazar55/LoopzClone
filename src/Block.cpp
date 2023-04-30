@@ -14,28 +14,26 @@ using namespace sf;
 Block::Block() : x(INT_MAX), y(INT_MAX), doors{false} {}
 
 Block::Block(int x, int y, int size) :
-    x(x), y(y), doors{true}, shape(sf::Vector2f(size, size))
+    x(x),
+    y(y),
+    doors{true},
+    shape(Vector2f(size, size))
 {
-    xIndex = x / size;
-    yIndex = y / size;
-    shape.setPosition(sf::Vector2f(x, y));
-    shape.setFillColor(sf::Color::Green);
-    shape.setOutlineColor(sf::Color::Blue);
+    shape.setPosition(Vector2f(x, y));
+    shape.setFillColor(Color::Green);
+    shape.setOutlineColor(Color::Blue);
     shape.setOutlineThickness(-5.f);
 }
 
 /* ========================================================================== */
 /*                                Get Position                                */
 /* ========================================================================== */
-sf::Vector2i Block::getPosition()
+Vector2i Block::getPosition()
 {
-    return sf::Vector2i(x, y);
+    return Vector2i(x, y);
 }
 
-/* ========================================================================== */
-/*                                 Get Indices                                */
-/* ========================================================================== */
-Vector2i Block::getIndices()
+Vector2i Block::getSize()
 {
     return Vector2i(xIndex, yIndex);
 }
@@ -47,15 +45,13 @@ void Block::move(int x, int y)
 {
     this->x += x;
     this->y += y;
-    xIndex  += x / shape.getSize().x;
-    yIndex  += x / shape.getSize().y;
-    shape.setPosition(sf::Vector2f(this->x, this->y));
+    shape.setPosition(Vector2f(this->x, this->y));
 }
 
 /* ========================================================================== */
 /*                                   Rotate                                   */
 /* ========================================================================== */
-void Block::rotate(float degrees, sf::Vector2i& origin)
+void Block::rotate(float degrees, Vector2i& origin)
 {
     const double PI = 3.141592653589793238;
     double radians  = degrees * PI / 180.f;
@@ -71,7 +67,7 @@ void Block::rotate(float degrees, sf::Vector2i& origin)
     x += origin.x;
     y += origin.y;
 
-    shape.setPosition(sf::Vector2f(x, y));
+    shape.setPosition(Vector2f(x, y));
 
     // Rotate doors now
     bool matrix[4][4] = {
@@ -95,7 +91,7 @@ void Block::rotate(float degrees, sf::Vector2i& origin)
 /* ========================================================================== */
 /*                                    Draw                                    */
 /* ========================================================================== */
-void Block::draw(sf::RenderWindow& window)
+void Block::draw(RenderWindow& window)
 {
     window.draw(shape);
 }

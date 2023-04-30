@@ -17,7 +17,7 @@ class Block
         int xIndex;
         int yIndex;
         bool doors[4];
-        sf::RectangleShape shape;
+        RectangleShape shape;
 
     public:
         Block();
@@ -26,8 +26,8 @@ class Block
         Vector2i getPosition();
         Vector2i getIndices();
         void move(int x, int y);
-        void rotate(float degrees, sf::Vector2i& origin);
-        void draw(sf::RenderWindow& window);
+        void rotate(float degrees, Vector2i& origin);
+        void draw(RenderWindow& window);
 
         template<typename T>
         int Dot(T* a, T* b, size_t length);
