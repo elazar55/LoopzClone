@@ -4,6 +4,7 @@
 #include "Block.h"
 #include <cassert>
 #include <cmath>
+#include <float.h>
 #include <iostream>
 using namespace std;
 using namespace sf;
@@ -11,18 +12,17 @@ using namespace sf;
 /* ========================================================================== */
 /*                             Empty Constructor                            */
 /* ========================================================================== */
-Block::Block() : x(INT_MAX), y(INT_MAX), doors{false} {}
+Block::Block() : m_pos(Vector2f(FLT_MAX, FLT_MAX)), doors{false} {}
 
 /* ========================================================================== */
 /*                             Custom Constructor                             */
 /* ========================================================================== */
-Block::Block(int x, int y, int size) :
-    x(x),
-    y(y),
+Block::Block(Vector2f pos, int size) :
+    m_pos(pos),
     doors{true},
     shape(Vector2f(size, size))
 {
-    shape.setPosition(Vector2f(x, y));
+    shape.setPosition(m_pos);
     shape.setFillColor(Color::Green);
     shape.setOutlineColor(Color::Blue);
     shape.setOutlineThickness(-5.f);
@@ -31,9 +31,9 @@ Block::Block(int x, int y, int size) :
 /* ========================================================================== */
 /*                                Get Position                                */
 /* ========================================================================== */
-Vector2i Block::getPosition()
+Vector2f Block::getPosition()
 {
-    return Vector2i(x, y);
+    return m_pos;
 }
 
 /* ========================================================================== */
@@ -48,33 +48,32 @@ Vector2i Block::getSize()
 /* ========================================================================== */
 /*                                    Move                                    */
 /* ========================================================================== */
-void Block::move(int x, int y)
+void Block::move(Vector2f direction)
 {
-    this->x += x;
-    this->y += y;
-    shape.setPosition(Vector2f(this->x, this->y));
+    m_pos += direction;
+    shape.setPosition(m_pos);
 }
 
 /* ========================================================================== */
 /*                                   Rotate                                   */
 /* ========================================================================== */
-void Block::rotate(float degrees, Vector2i& origin)
+void Block::rotate(float degrees, Vector2f& origin)
 {
     const double PI = 3.141592653589793238;
     double radians  = degrees * PI / 180.f;
     double sinTheta = std::round(std::sin(radians));
     double cosTheta = std::round(std::cos(radians));
 
-    int localx = x - origin.x;
-    int localy = y - origin.y;
+    int localx = m_pos.x - origin.x;
+    int localy = m_pos.y - origin.y;
 
-    x = (localx * cosTheta) + (localy * -sinTheta);
-    y = (localx * sinTheta) + (localy * cosTheta);
+    m_pos.x = (localx * cosTheta) + (localy * -sinTheta);
+    m_pos.y = (localx * sinTheta) + (localy * cosTheta);
 
-    x += origin.x;
-    y += origin.y;
+    m_pos.x += origin.x;
+    m_pos.y += origin.y;
 
-    shape.setPosition(Vector2f(x, y));
+    shape.setPosition(m_pos);
 
     // Rotate doors now
     bool matrix[4][4] = {

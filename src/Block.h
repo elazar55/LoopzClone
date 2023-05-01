@@ -12,19 +12,18 @@ using namespace sf;
 class Block
 {
     private:
-        int x;
-        int y;
+        Vector2f m_pos;
         bool doors[4];
         RectangleShape shape;
 
     public:
         Block();
-        Block(int x, int y, int size);
+        Block(Vector2f pos, int size);
 
-        Vector2i getPosition();
+        Vector2f getPosition();
         Vector2i getSize();
-        void move(int x, int y);
-        void rotate(float degrees, Vector2i& origin);
+        void move(Vector2f direction);
+        void rotate(float degrees, Vector2f& origin);
         void draw(RenderWindow& window);
 
         template<typename T>

@@ -5,12 +5,14 @@
 #include "Piece.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <stdlib.h>
 
 /* ========================================================================== */
 /*                                    Main                                    */
 /* ========================================================================== */
 int main()
 {
+    srand(time(NULL));
     // Parameters
     const int WINDOW_WIDTH  = 640;
     const int WINDOW_HEIGHT = 480;
@@ -23,9 +25,9 @@ int main()
                             "SFML works!");
 
     // Game objects
-    Board board(GRID_WIDTH, GRID_HEIGHT, Vector2i(20, 20),
+    Board board(GRID_WIDTH, GRID_HEIGHT, Vector2f(60, 60),
                 BLOCK_SIZE * GRID_WIDTH, BLOCK_SIZE * GRID_HEIGHT);
-    Piece piece(20, 20, BLOCK_SIZE, Piece::Mino::L);
+    Piece piece(120, 120, BLOCK_SIZE, Piece::Mino::S);
 
     // Game loop
     while (window.isOpen())
@@ -41,13 +43,27 @@ int main()
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Escape: window.close(); break;
-                    case sf::Keyboard::W: piece.move(0, -BLOCK_SIZE); break;
-                    case sf::Keyboard::R: piece.move(0, BLOCK_SIZE); break;
-                    case sf::Keyboard::S: piece.move(BLOCK_SIZE, 0); break;
-                    case sf::Keyboard::A: piece.move(-BLOCK_SIZE, 0); break;
+                    case sf::Keyboard::W:
+                        piece.move(Vector2f(0, -BLOCK_SIZE));
+                        break;
+                    case sf::Keyboard::R:
+                        piece.move(Vector2f(0, BLOCK_SIZE));
+                        break;
+                    case sf::Keyboard::S:
+                        piece.move(Vector2f(BLOCK_SIZE, 0));
+                        break;
+                    case sf::Keyboard::A:
+                        piece.move(Vector2f(-BLOCK_SIZE, 0));
+                        break;
                     case sf::Keyboard::Q: piece.rotate(90); break;
                     case sf::Keyboard::F: piece.rotate(-90); break;
-                    case sf::Keyboard::Space: board.PushPiece(piece); break;
+                    case sf::Keyboard::Space:
+                        if (board.PushPiece(piece) == EXIT_SUCCESS)
+                        {
+                            piece = Piece(120, 120, BLOCK_SIZE,
+                                          Piece::Mino::Random);
+                        }
+                        break;
 
                     default: break;
                 }

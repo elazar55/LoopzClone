@@ -8,7 +8,7 @@ using namespace std;
 /* ========================================================================== */
 /*                                 Constructor                                */
 /* ========================================================================== */
-Board::Board(size_t gridWidth, size_t gridHeight, Vector2i pos, int sizeX,
+Board::Board(size_t gridWidth, size_t gridHeight, Vector2f pos, int sizeX,
              int sizeY) :
     gridWidth(gridWidth),
     gridHeight(gridHeight),
@@ -38,18 +38,31 @@ Board::Board(size_t gridWidth, size_t gridHeight, Vector2i pos, int sizeX,
 /* ========================================================================== */
 /*                                 Push Piece                                 */
 /* ========================================================================== */
-void Board::PushPiece(Piece& piece)
+bool Board::PushPiece(Piece& piece)
 {
+    // Checks if blocks are in bounds
     for (auto&& i : piece.getBlocks())
     {
-        int xIndex = i.getPosition().x / i.getSize().x;
-        int yIndex = i.getPosition().y / i.getSize().y;
+        float xIndex = (i.getPosition().x - pos.x) / i.getSize().x;
+        float yIndex = (i.getPosition().y - pos.y) / i.getSize().y;
 
-        grid[yIndex][xIndex] =
-            Block(i.getPosition().x, i.getPosition().y, i.getSize().x);
+        if (xIndex < 0 || yIndex < 0 || xIndex > gridWidth - 1 ||
+            yIndex > gridHeight - 1)
+        {
+            return EXIT_FAILURE;
+        }
+    }
+    // They're in bounds
+    for (auto&& i : piece.getBlocks())
+    {
+        float xIndex = (i.getPosition().x - pos.x) / i.getSize().x;
+        float yIndex = (i.getPosition().y - pos.y) / i.getSize().y;
 
         cout << "X Index: " << xIndex << " Y Index: " << yIndex << endl;
+        grid[(int)yIndex][(int)xIndex] = i;
     }
+
+    return EXIT_SUCCESS;
     // TODO: Compensate for grid location
     // TODO: Refactor Block parameters
 }

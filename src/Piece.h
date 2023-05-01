@@ -16,16 +16,16 @@ class Piece
         vector<Block> blocks;
 
     public:
-        enum Mino { Single, S, Z, Line, L, J, U, BigZ, NUM_SHAPES };
+        enum Mino { Single, S, Z, Line, L, J, U, BigZ, Random, NUM_SHAPES };
 
-        Piece(int x, int y, int size, const Mino mino);
+        Piece(int x, int y, int size, Mino mino);
 
         void draw(RenderWindow& window);
-        void move(int x, int y);
+        void move(Vector2f direction);
         void rotate(int degrees);
-        vector<Vector2i> getPositions();
+        vector<Vector2f> getPositions();
         vector<Block> getBlocks();
-        void ConstructMino(int x, int y, int size, const Piece::Mino mino);
+        void ConstructMino(int x, int y, int size, Piece::Mino mino);
 };
 
 #endif
