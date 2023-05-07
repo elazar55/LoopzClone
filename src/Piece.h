@@ -16,16 +16,28 @@ class Piece
         vector<Block> blocks;
 
     public:
-        enum Mino { Single, S, Z, Line, L, J, U, BigZ, Random, NUM_SHAPES };
+        enum Mino {
+            Single,
+            SingleE2,
+            SingleE2a,
+            S,
+            Z,
+            Line,
+            L,
+            J,
+            U,
+            BigZ,
+            Random,
+        };
 
-        Piece(int x, int y, int size, Mino mino);
+        Piece(float x, float y, float size, Mino mino);
 
-        void draw(RenderWindow& window);
-        void move(Vector2f direction);
-        void rotate(int degrees);
+        void             draw(RenderWindow& window);
+        void             move(Vector2f direction);
+        void             rotate(float degrees);
         vector<Vector2f> getPositions();
-        vector<Block> getBlocks();
-        void ConstructMino(int x, int y, int size, Piece::Mino mino);
+        vector<Block>    getBlocks();
+        void ConstructMino(float x, float y, float size, Piece::Mino mino);
 };
 
 #endif

@@ -25,9 +25,8 @@ int main()
                             "SFML works!");
 
     // Game objects
-    Board board(GRID_WIDTH, GRID_HEIGHT, Vector2f(60, 60),
-                BLOCK_SIZE * GRID_WIDTH, BLOCK_SIZE * GRID_HEIGHT);
-    Piece piece(120, 120, BLOCK_SIZE, Piece::Mino::S);
+    Board board(GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, Vector2f(32, 32));
+    Piece piece(32, 32, BLOCK_SIZE, Piece::Mino::Single);
 
     // Game loop
     while (window.isOpen())
@@ -60,8 +59,8 @@ int main()
                     case sf::Keyboard::Space:
                         if (board.PushPiece(piece) == EXIT_SUCCESS)
                         {
-                            piece = Piece(120, 120, BLOCK_SIZE,
-                                          Piece::Mino::Random);
+                            piece = Piece(BLOCK_SIZE * 5, BLOCK_SIZE * 5,
+                                          BLOCK_SIZE, Piece::Mino::Random);
                         }
                         break;
 
@@ -72,8 +71,8 @@ int main()
 
         // Draw
         window.clear();
-        piece.draw(window);
         board.draw(window);
+        piece.draw(window);
         window.display();
     }
     return EXIT_SUCCESS;

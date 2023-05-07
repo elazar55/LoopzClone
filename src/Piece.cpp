@@ -5,11 +5,20 @@
 #include <iostream>
 using namespace std;
 using namespace sf;
+// clang-format off
+
+#define NONE {0, 0, 0, 0}
+#define TOP {1, 0, 0, 0}
+#define RIGHT {0, 1, 0, 0}
+#define BOTTOM {0, 0, 1, 0}
+#define LEFT {0, 0, 0, 1}
+
+// clang-format on
 
 /* ========================================================================== */
 /*                                 Constructor                                */
 /* ========================================================================== */
-Piece::Piece(int x, int y, int size, Mino mino)
+Piece::Piece(float x, float y, float size, Mino mino)
 {
     ConstructMino(x, y, size, mino);
 }
@@ -17,7 +26,7 @@ Piece::Piece(int x, int y, int size, Mino mino)
 /* ========================================================================== */
 /*                                ConstructMino                               */
 /* ========================================================================== */
-void Piece::ConstructMino(int x, int y, int size, Piece::Mino mino)
+void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
 {
     if (mino == Random)
     {
@@ -25,14 +34,15 @@ void Piece::ConstructMino(int x, int y, int size, Piece::Mino mino)
     }
     if (mino == Single)
     {
-        blocks.push_back(Block(Vector2f(x, y), size));
+        blocks.push_back(
+            Block(Vector2f(x, y), size, (const bool[4]){0, 0, 0, 1}));
     }
     else if (mino == S)
     {
-        blocks.push_back(Block(Vector2f(x, y), size));
-        blocks.push_back(Block(Vector2f(x, y - size), size));
-        blocks.push_back(Block(Vector2f(x + size, y - size), size));
-        blocks.push_back(Block(Vector2f(x - size, y), size));
+        blocks.push_back(Block(Vector2f(x, y), size));               // Center
+        blocks.push_back(Block(Vector2f(x, y - size), size));        // Top
+        blocks.push_back(Block(Vector2f(x + size, y - size), size)); // TopRight
+        blocks.push_back(Block(Vector2f(x - size, y), size)); // Bottom Left
     }
     else if (mino == Z)
     {
@@ -90,7 +100,7 @@ void Piece::move(Vector2f direction)
 /* ========================================================================== */
 /*                                   Rotate                                   */
 /* ========================================================================== */
-void Piece::rotate(int degrees)
+void Piece::rotate(float degrees)
 {
     // Forwards to individual blocks
     Vector2f origin = blocks[0].getPosition();
