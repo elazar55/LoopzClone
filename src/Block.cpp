@@ -19,19 +19,15 @@ Block::Block() : m_pos(Vector2f(FLT_MAX, FLT_MAX)), m_doors{false} {}
 /* ========================================================================== */
 Block::Block(Vector2f pos, float size, const bool doors[4]) :
     m_pos(pos),
+    m_doors{false},
     shape(Vector2f(size, size))
 {
-    for (size_t i = 0; i < sizeof(doors); i++)
+    for (size_t i = 0; i < sizeof(m_doors); i++)
     {
         m_doors[i] = doors[i];
     }
-    for (size_t i = 0; i < sizeof(m_doors); i++)
-    {
-        cout << m_doors[i] << " ";
-    }
-    cout << endl;
+
     shape.setPosition(m_pos);
-    shape.setFillColor(Color::Green);
     shape.setOutlineColor(Color::Blue);
     shape.setOutlineThickness(-5.f);
 }
@@ -50,6 +46,17 @@ Vector2f Block::getPosition()
 Vector2f Block::getSize()
 {
     return Vector2f(shape.getSize());
+}
+
+/* ========================================================================== */
+/*                                  Set Doors                                 */
+/* ========================================================================== */
+void Block::setDoors(const bool doors[4])
+{
+    for (size_t i = 0; i < sizeof(m_doors); i++)
+    {
+        m_doors[i] = doors[i];
+    }
 }
 
 /* ========================================================================== */
@@ -91,20 +98,22 @@ void Block::rotate(float degrees, Vector2f& origin)
     };
     static_assert(sizeof(m_doors) == sizeof(matrix[0]));
 
+    bool copy[4];
+    for (int i = 0; i < 4; i++) copy[i] = m_doors[i];
+
     for (size_t i = 0; i < sizeof(m_doors); i++)
     {
         int j = i + sinTheta;
         if (j == 4) j = 0;
         else if (j == -1) j = 3;
 
-        m_doors[i] = Dot(m_doors, matrix[j], sizeof(m_doors));
+        copy[i] = Dot(m_doors, matrix[j], sizeof(m_doors));
     }
 
     for (size_t i = 0; i < sizeof(m_doors); i++)
     {
-        cout << m_doors[i] << " ";
+        m_doors[i] = copy[i];
     }
-    cout << endl;
 }
 
 /* ========================================================================== */
@@ -112,6 +121,12 @@ void Block::rotate(float degrees, Vector2f& origin)
 /* ========================================================================== */
 void Block::draw(RenderWindow& window)
 {
+    Uint32 color = 0xFFFFFFFF;
+    if (m_doors[0]) color = 0xff1100FF;
+    if (m_doors[1]) color = 0xb1ff00FF;
+    if (m_doors[2]) color = 0xffd966FF;
+    if (m_doors[3]) color = 0x9fc5e8FF;
+    shape.setFillColor(Color(color));
     window.draw(shape);
 }
 

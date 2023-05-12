@@ -18,10 +18,12 @@ class Block
 
     public:
         Block();
-        Block(Vector2f pos, float size, const bool doors[4] = {0});
+        Block(Vector2f pos, float size,
+              const bool doors[4] = (const bool[4]){0, 0, 0, 0});
 
         Vector2f getPosition();
         Vector2f getSize();
+        void     setDoors(const bool doors[4]);
         void     move(Vector2f direction);
         void     rotate(float degrees, Vector2f& origin);
         void     draw(RenderWindow& window);

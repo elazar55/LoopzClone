@@ -59,8 +59,8 @@ int main()
                     case sf::Keyboard::Space:
                         if (board.PushPiece(piece) == EXIT_SUCCESS)
                         {
-                            piece = Piece(BLOCK_SIZE * 5, BLOCK_SIZE * 5,
-                                          BLOCK_SIZE, Piece::Mino::Random);
+                            piece =
+                                Piece(64, 64, BLOCK_SIZE, Piece::Mino::Random);
                         }
                         break;
 

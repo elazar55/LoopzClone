@@ -18,8 +18,6 @@ class Piece
     public:
         enum Mino {
             Single,
-            SingleE2,
-            SingleE2a,
             S,
             Z,
             Line,
