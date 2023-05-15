@@ -7,11 +7,13 @@ using namespace std;
 using namespace sf;
 // clang-format off
 
-#define DOOR_NON    (const bool[]){0, 0, 0, 0}
-#define DOOR_TOP    (const bool[]){1, 0, 0, 0}
-#define DOOR_RIGHT  (const bool[]){0, 1, 0, 0}
-#define DOOR_BOTTOM (const bool[]){0, 0, 1, 0}
-#define DOOR_LEFT   (const bool[]){0, 0, 0, 1}
+#define DOOR_NON      (const bool[]){0, 0, 0, 0}
+#define DOOR_TOP      (const bool[]){1, 0, 0, 0}
+#define DOOR_RIGHT    (const bool[]){0, 1, 0, 0}
+#define DOOR_BOTTOM   (const bool[]){0, 0, 1, 0}
+#define DOOR_LEFT     (const bool[]){0, 0, 0, 1}
+#define DOOR_VERT     (const bool[]){1, 0, 1, 0}
+#define DOOR_HORZ     (const bool[]){0, 1, 0, 1}
 
 #define BLOCK_CENTER       Vector2f(x, y)
 #define BLOCK_TOP          Vector2f(x, y - size)
@@ -39,7 +41,7 @@ Piece::Piece(float x, float y, float size, Mino mino)
 void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
 {
     // Center
-    blocks.push_back(Block(Vector2f(x, y), size));
+    blocks.push_back(Block(Vector2f(x, y), size, bitset<4>(4)));
 
     if (mino == Random)
     {
@@ -48,50 +50,50 @@ void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
 
     if (mino == Single)
     {
-        blocks.back().setDoors(DOOR_TOP);
+        blocks.back().setDoors(bitset<4>(1));
     }
     else if (mino == S)
     {
         blocks.push_back(Block(BLOCK_TOP, size));
-        blocks.push_back(Block(BLOCK_TOP_RIGHT, size, DOOR_RIGHT));
-        blocks.push_back(Block(BLOCK_LEFT, size, DOOR_LEFT));
+        blocks.push_back(Block(BLOCK_TOP_RIGHT, size));
+        blocks.push_back(Block(BLOCK_LEFT, size));
     }
     else if (mino == Z)
     {
         blocks.push_back(Block(BLOCK_TOP, size));
-        blocks.push_back(Block(BLOCK_TOP_LEFT, size, DOOR_LEFT));
-        blocks.push_back(Block(BLOCK_RIGHT, size, DOOR_RIGHT));
+        blocks.push_back(Block(BLOCK_TOP_LEFT, size));
+        blocks.push_back(Block(BLOCK_RIGHT, size));
     }
     else if (mino == Line)
     {
-        blocks.push_back(Block(BLOCK_BOTTOM, size, DOOR_BOTTOM));
-        blocks.push_back(Block(BLOCK_TOP, size, DOOR_TOP));
+        blocks.push_back(Block(BLOCK_BOTTOM, size));
+        blocks.push_back(Block(BLOCK_TOP, size));
     }
     else if (mino == J)
     {
-        blocks.push_back(Block(BLOCK_TOP, size, DOOR_TOP));
+        blocks.push_back(Block(BLOCK_TOP, size));
         blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_BOTTOM_LEFT, size, DOOR_LEFT));
+        blocks.push_back(Block(BLOCK_BOTTOM_LEFT, size));
     }
     else if (mino == L)
     {
-        blocks.push_back(Block(BLOCK_TOP, size, DOOR_TOP));
+        blocks.push_back(Block(BLOCK_TOP, size));
         blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size, DOOR_RIGHT));
+        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size));
     }
     else if (mino == U)
     {
         blocks.push_back(Block(BLOCK_TOP, size));
         blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size, DOOR_RIGHT));
-        blocks.push_back(Block(BLOCK_TOP_RIGHT, size, DOOR_RIGHT));
+        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size));
+        blocks.push_back(Block(BLOCK_TOP_RIGHT, size));
     }
     else if (mino == BigZ)
     {
         blocks.push_back(Block(BLOCK_TOP, size));
         blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size, DOOR_RIGHT));
-        blocks.push_back(Block(BLOCK_TOP_LEFT, size, DOOR_LEFT));
+        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size));
+        blocks.push_back(Block(BLOCK_TOP_LEFT, size));
     }
 }
 

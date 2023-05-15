@@ -17,16 +17,11 @@ Block::Block() : m_pos(Vector2f(FLT_MAX, FLT_MAX)), m_doors{false} {}
 /* ========================================================================== */
 /*                             Custom Constructor                             */
 /* ========================================================================== */
-Block::Block(Vector2f pos, float size, const bool doors[4]) :
+Block::Block(Vector2f pos, float size, const bitset<4> doors) :
     m_pos(pos),
-    m_doors{false},
+    m_doors(doors),
     shape(Vector2f(size, size))
 {
-    for (size_t i = 0; i < sizeof(m_doors); i++)
-    {
-        m_doors[i] = doors[i];
-    }
-
     shape.setPosition(m_pos);
     shape.setOutlineColor(Color::Blue);
     shape.setOutlineThickness(-5.f);
@@ -51,7 +46,7 @@ Vector2f Block::getSize()
 /* ========================================================================== */
 /*                                  Set Doors                                 */
 /* ========================================================================== */
-void Block::setDoors(const bool doors[4])
+void Block::setDoors(const bitset<4> doors)
 {
     for (size_t i = 0; i < sizeof(m_doors); i++)
     {
@@ -107,13 +102,15 @@ void Block::rotate(float degrees, Vector2f& origin)
         if (j == 4) j = 0;
         else if (j == -1) j = 3;
 
-        copy[i] = Dot(m_doors, matrix[j], sizeof(m_doors));
+        copy[i] = Dot<bitset<4>, bool[4]>(m_doors, matrix[j], m_doors.size());
     }
 
     for (size_t i = 0; i < sizeof(m_doors); i++)
     {
         m_doors[i] = copy[i];
     }
+
+    cout << m_doors << endl;
 }
 
 /* ========================================================================== */
@@ -133,10 +130,10 @@ void Block::draw(RenderWindow& window)
 /* ========================================================================== */
 /*                                 Dot Product                                */
 /* ========================================================================== */
-template<typename T>
-int Block::Dot(T* v1, T* v2, size_t length)
+template<typename T, typename U>
+int Block::Dot(T v1, U v2, size_t length)
 {
-    T result{};
+    int result{};
 
     for (size_t i = 0; i < length; i++) result += (v1[i] * v2[i]);
 
