@@ -33,8 +33,8 @@ class Piece
         void             draw(RenderWindow& window);
         void             move(Vector2f direction);
         void             rotate(float degrees);
-        vector<Vector2f> getPositions();
-        vector<Block>    getBlocks();
+        vector<Vector2f> Positions() const;
+        vector<Block>    Blocks() const;
         void ConstructMino(float x, float y, float size, Piece::Mino mino);
 };
 

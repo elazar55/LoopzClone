@@ -24,12 +24,18 @@ class Board
         VertexArray     hLines;
         VertexArray     vLines;
         vector2D<Block> grid;
+        Piece           piece_;
+
+        Vector2f BlockIndex(Vector2f position, Vector2f size) const;
 
     public:
         Board(size_t rows, size_t columns, float size, Vector2f pos);
 
-        bool PushPiece(Piece& piece);
+        bool PushPiece();
+        void MovePiece(Vector2f direction);
+        void RotatePiece(float angle);
         void draw(RenderWindow& window);
+        void SpawnPiece();
 };
 
 #endif

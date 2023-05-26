@@ -5,27 +5,6 @@
 #include <iostream>
 using namespace std;
 using namespace sf;
-// clang-format off
-
-#define DOOR_NON      (const bool[]){0, 0, 0, 0}
-#define DOOR_TOP      (const bool[]){1, 0, 0, 0}
-#define DOOR_RIGHT    (const bool[]){0, 1, 0, 0}
-#define DOOR_BOTTOM   (const bool[]){0, 0, 1, 0}
-#define DOOR_LEFT     (const bool[]){0, 0, 0, 1}
-#define DOOR_VERT     (const bool[]){1, 0, 1, 0}
-#define DOOR_HORZ     (const bool[]){0, 1, 0, 1}
-
-#define BLOCK_CENTER       Vector2f(x, y)
-#define BLOCK_TOP          Vector2f(x, y - size)
-#define BLOCK_BOTTOM       Vector2f(x, y + size)
-#define BLOCK_LEFT         Vector2f(x - size, y)
-#define BLOCK_RIGHT        Vector2f(x + size, y)
-#define BLOCK_TOP_RIGHT    Vector2f(x + size, y - size)
-#define BLOCK_TOP_LEFT     Vector2f(x - size, y - size)
-#define BLOCK_BOTTOM_LEFT  Vector2f(x - size, y + size)
-#define BLOCK_BOTTOM_RIGHT Vector2f(x + size, y + size)
-
-// clang-format on
 
 /* ========================================================================== */
 /*                                 Constructor                                */
@@ -40,9 +19,6 @@ Piece::Piece(float x, float y, float size, Mino mino)
 /* ========================================================================== */
 void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
 {
-    // Center
-    blocks.push_back(Block(Vector2f(x, y), size, bitset<4>(4)));
-
     if (mino == Random)
     {
         mino = Mino(rand() % Random);
@@ -50,50 +26,61 @@ void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
 
     if (mino == Single)
     {
-        blocks.back().setDoors(bitset<4>(1));
+        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
     }
     else if (mino == S)
     {
-        blocks.push_back(Block(BLOCK_TOP, size));
-        blocks.push_back(Block(BLOCK_TOP_RIGHT, size));
-        blocks.push_back(Block(BLOCK_LEFT, size));
+        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_LEFT | DOOR_TOP));
+        blocks.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_RIGHT));
+        blocks.push_back(Block(BLOCK_TOP_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
+        blocks.push_back(Block(BLOCK_LEFT, size, DOOR_LEFT | DOOR_RIGHT));
     }
     else if (mino == Z)
     {
-        blocks.push_back(Block(BLOCK_TOP, size));
-        blocks.push_back(Block(BLOCK_TOP_LEFT, size));
-        blocks.push_back(Block(BLOCK_RIGHT, size));
+        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_RIGHT | DOOR_TOP));
+        blocks.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_LEFT));
+        blocks.push_back(Block(BLOCK_TOP_LEFT, size, DOOR_RIGHT | DOOR_LEFT));
+        blocks.push_back(Block(BLOCK_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
     }
     else if (mino == Line)
     {
-        blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_TOP, size));
+        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_BOTTOM | DOOR_TOP));
+        blocks.push_back(Block(BLOCK_BOTTOM, size, DOOR_BOTTOM | DOOR_TOP));
+        blocks.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_TOP));
     }
     else if (mino == J)
     {
-        blocks.push_back(Block(BLOCK_TOP, size));
-        blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_BOTTOM_LEFT, size));
+        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
+        blocks.push_back(Block(BLOCK_TOP, size, DOOR_TOP | DOOR_BOTTOM));
+        blocks.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_BOTTOM));
+        blocks.push_back(
+            Block(BLOCK_BOTTOM_LEFT, size, DOOR_LEFT | DOOR_RIGHT));
     }
     else if (mino == L)
     {
-        blocks.push_back(Block(BLOCK_TOP, size));
-        blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size));
+        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
+        blocks.push_back(Block(BLOCK_TOP, size, DOOR_TOP | DOOR_BOTTOM));
+        blocks.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_RIGHT));
+        blocks.push_back(
+            Block(BLOCK_BOTTOM_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
     }
     else if (mino == U)
     {
-        blocks.push_back(Block(BLOCK_TOP, size));
-        blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size));
-        blocks.push_back(Block(BLOCK_TOP_RIGHT, size));
+        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
+        blocks.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_RIGHT));
+        blocks.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_RIGHT));
+        blocks.push_back(
+            Block(BLOCK_BOTTOM_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
+        blocks.push_back(Block(BLOCK_TOP_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
     }
     else if (mino == BigZ)
     {
-        blocks.push_back(Block(BLOCK_TOP, size));
-        blocks.push_back(Block(BLOCK_BOTTOM, size));
-        blocks.push_back(Block(BLOCK_BOTTOM_RIGHT, size));
-        blocks.push_back(Block(BLOCK_TOP_LEFT, size));
+        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
+        blocks.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_LEFT));
+        blocks.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_RIGHT));
+        blocks.push_back(
+            Block(BLOCK_BOTTOM_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
+        blocks.push_back(Block(BLOCK_TOP_LEFT, size, DOOR_LEFT | DOOR_RIGHT));
     }
 }
 
@@ -102,8 +89,7 @@ void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
 /* ========================================================================== */
 void Piece::draw(RenderWindow& window)
 {
-    // Forwards to individual blocks
-    for (auto& i : blocks) i.draw(window);
+    for (auto& i : blocks) i.Draw(window);
 }
 
 /* ========================================================================== */
@@ -111,8 +97,7 @@ void Piece::draw(RenderWindow& window)
 /* ========================================================================== */
 void Piece::move(Vector2f direction)
 {
-    // Forwards to individual blocks
-    for (auto&& i : blocks) i.move(direction);
+    for (auto&& i : blocks) i.Move(direction);
 }
 
 /* ========================================================================== */
@@ -120,19 +105,18 @@ void Piece::move(Vector2f direction)
 /* ========================================================================== */
 void Piece::rotate(float degrees)
 {
-    // Forwards to individual blocks
-    Vector2f origin = blocks[0].getPosition();
+    Vector2f origin = blocks[0].Position();
 
-    for (auto&& i : blocks) i.rotate(degrees, origin);
+    for (auto&& i : blocks) i.Rotate(degrees, origin);
 }
 
 /* ========================================================================== */
 /*                                Get Positions                               */
 /* ========================================================================== */
-vector<Vector2f> Piece::getPositions()
+vector<Vector2f> Piece::Positions() const
 {
     vector<Vector2f> positions;
-    for (auto& i : blocks) positions.push_back(i.getPosition());
+    for (auto& i : blocks) positions.push_back(i.Position());
 
     return positions;
 }
@@ -140,7 +124,7 @@ vector<Vector2f> Piece::getPositions()
 /* ========================================================================== */
 /*                                 Get Blocks                                 */
 /* ========================================================================== */
-vector<Block> Piece::getBlocks()
+vector<Block> Piece::Blocks() const
 {
     return blocks;
 }

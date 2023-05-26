@@ -12,126 +12,147 @@ using namespace sf;
 /* ========================================================================== */
 /*                             Empty Constructor                            */
 /* ========================================================================== */
-Block::Block() : m_pos(Vector2f(FLT_MAX, FLT_MAX)), m_doors{false} {}
+Block::Block() : position_(Vector2f(FLT_MAX, FLT_MAX)), doors_{false} {}
 
 /* ========================================================================== */
 /*                             Custom Constructor                             */
 /* ========================================================================== */
 Block::Block(Vector2f pos, float size, const bitset<4> doors) :
-    m_pos(pos),
-    m_doors(doors),
-    shape(Vector2f(size, size))
+    position_(pos),
+    doors_(doors),
+    shape_(Vector2f(size, size))
 {
-    shape.setPosition(m_pos);
-    shape.setOutlineColor(Color::Blue);
-    shape.setOutlineThickness(-5.f);
+    shape_.setPosition(position_);
+    shape_.setOutlineColor(Color::Blue);
+    shape_.setOutlineThickness(-5.f);
 }
 
 /* ========================================================================== */
 /*                                Get Position                                */
 /* ========================================================================== */
-Vector2f Block::getPosition()
+Vector2f Block::Position() const
 {
-    return m_pos;
+    return position_;
 }
 
 /* ========================================================================== */
 /*                                  Get Size                                  */
 /* ========================================================================== */
-Vector2f Block::getSize()
+Vector2f Block::Size() const
 {
-    return Vector2f(shape.getSize());
+    return Vector2f(shape_.getSize());
 }
 
 /* ========================================================================== */
 /*                                  Set Doors                                 */
 /* ========================================================================== */
-void Block::setDoors(const bitset<4> doors)
+void Block::SetDoors(bitset<4> doors)
 {
-    for (size_t i = 0; i < sizeof(m_doors); i++)
+    for (size_t i = 0; i < sizeof(doors_); i++)
     {
-        m_doors[i] = doors[i];
+        doors_[i] = doors[i];
     }
 }
 
 /* ========================================================================== */
 /*                                    Move                                    */
 /* ========================================================================== */
-void Block::move(Vector2f direction)
+void Block::Move(Vector2f direction)
 {
-    m_pos += direction;
-    shape.setPosition(m_pos);
+    position_ += direction;
+    shape_.setPosition(position_);
 }
 
 /* ========================================================================== */
 /*                                   Rotate                                   */
 /* ========================================================================== */
-void Block::rotate(float degrees, Vector2f& origin)
+void Block::Rotate(float degrees, const Vector2f& origin)
 {
     const double PI       = 3.141592653589793238;
     double       radians  = degrees * PI / 180.f;
     double       sinTheta = std::round(std::sin(radians));
     double       cosTheta = std::round(std::cos(radians));
 
-    int localx = m_pos.x - origin.x;
-    int localy = m_pos.y - origin.y;
+    int localx = position_.x - origin.x;
+    int localy = position_.y - origin.y;
 
-    m_pos.x = (localx * cosTheta) + (localy * -sinTheta);
-    m_pos.y = (localx * sinTheta) + (localy * cosTheta);
+    position_.x = (localx * cosTheta) + (localy * -sinTheta);
+    position_.y = (localx * sinTheta) + (localy * cosTheta);
 
-    m_pos.x += origin.x;
-    m_pos.y += origin.y;
+    position_.x += origin.x;
+    position_.y += origin.y;
 
-    shape.setPosition(m_pos);
+    shape_.setPosition(position_);
 
-    // Rotate doors now
-    bool matrix[4][4] = {
-        {1, 0, 0, 0},
-        {0, 1, 0, 0},
-        {0, 0, 1, 0},
-        {0, 0, 0, 1},
-    };
-    static_assert(sizeof(m_doors) == sizeof(matrix[0]));
+    const bitset<4> matrix[4] = {1, 2, 4, 8};
+    bitset<4>       copy(doors_);
+    assert(copy == doors_);
 
-    bool copy[4];
-    for (int i = 0; i < 4; i++) copy[i] = m_doors[i];
-
-    for (size_t i = 0; i < sizeof(m_doors); i++)
+    for (size_t i = 0; i < sizeof(doors_); i++)
     {
         int j = i + sinTheta;
         if (j == 4) j = 0;
         else if (j == -1) j = 3;
 
-        copy[i] = Dot<bitset<4>, bool[4]>(m_doors, matrix[j], m_doors.size());
+        copy[i] = Dot<bitset<4>>(doors_, matrix[j], doors_.size());
     }
 
-    for (size_t i = 0; i < sizeof(m_doors); i++)
-    {
-        m_doors[i] = copy[i];
-    }
+    doors_ = bitset<4>(copy);
+    assert(doors_ == copy);
 
-    cout << m_doors << endl;
+    cout << doors_ << endl;
 }
 
 /* ========================================================================== */
 /*                                    Draw                                    */
 /* ========================================================================== */
-void Block::draw(RenderWindow& window)
+void Block::Draw(RenderWindow& window)
 {
-    Uint32 color = 0xFFFFFFFF;
-    if (m_doors[0]) color = 0xff1100FF;
-    if (m_doors[1]) color = 0xb1ff00FF;
-    if (m_doors[2]) color = 0xffd966FF;
-    if (m_doors[3]) color = 0x9fc5e8FF;
-    shape.setFillColor(Color(color));
-    window.draw(shape);
+    window.draw(shape_);
+    if ((doors_ & DOOR_TOP) == DOOR_TOP)
+    {
+        CircleShape door1(5.f);
+        Vector2f    Pos((shape_.getSize().x / 2) - 5.f, 0);
+        door1.setPosition(position_ + Pos);
+        door1.setFillColor(Color::Red);
+        window.draw(door1);
+    }
+    if ((doors_ & DOOR_BOTTOM) == DOOR_BOTTOM)
+    {
+        CircleShape door1(5.f);
+        Vector2f Pos((shape_.getSize().x / 2) - 5.f, shape_.getSize().y - 10.f);
+        door1.setPosition(position_ + Pos);
+        door1.setFillColor(Color::Red);
+        window.draw(door1);
+    }
+    if ((doors_ & DOOR_LEFT) == DOOR_LEFT)
+    {
+        CircleShape door1(5.f);
+        Vector2f    Pos(0, (shape_.getSize().y / 2) - 5);
+        door1.setPosition(position_ + Pos);
+        door1.setFillColor(Color::Red);
+        window.draw(door1);
+    }
+    if ((doors_ & DOOR_RIGHT) == DOOR_RIGHT)
+    {
+        CircleShape door1(5.f);
+        Vector2f    Pos(shape_.getSize().x - 10, (shape_.getSize().y / 2) - 5);
+        door1.setPosition(position_ + Pos);
+        door1.setFillColor(Color::Red);
+        window.draw(door1);
+    }
+}
+
+bool Block::IsEmpty() const
+{
+    return position_.x == FLT_MAX ? true : false;
 }
 
 /* ========================================================================== */
 /*                                 Dot Product                                */
 /* ========================================================================== */
-template<typename T, typename U>
-int Block::Dot(T v1, U v2, size_t length)
+template<typename T>
+int Block::Dot(T v1, T v2, size_t length)
 {
     int result{};
 

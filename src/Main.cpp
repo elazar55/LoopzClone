@@ -26,7 +26,7 @@ int main()
 
     // Game objects
     Board board(GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, Vector2f(32, 32));
-    Piece piece(32, 32, BLOCK_SIZE, Piece::Mino::Single);
+    // Piece piece(32, 32, BLOCK_SIZE, Piece::Mino::Single);
 
     // Game loop
     while (window.isOpen())
@@ -43,24 +43,23 @@ int main()
                 {
                     case sf::Keyboard::Escape: window.close(); break;
                     case sf::Keyboard::W:
-                        piece.move(Vector2f(0, -BLOCK_SIZE));
+                        board.MovePiece(Vector2f(0, -BLOCK_SIZE));
                         break;
                     case sf::Keyboard::R:
-                        piece.move(Vector2f(0, BLOCK_SIZE));
+                        board.MovePiece(Vector2f(0, BLOCK_SIZE));
                         break;
                     case sf::Keyboard::S:
-                        piece.move(Vector2f(BLOCK_SIZE, 0));
+                        board.MovePiece(Vector2f(BLOCK_SIZE, 0));
                         break;
                     case sf::Keyboard::A:
-                        piece.move(Vector2f(-BLOCK_SIZE, 0));
+                        board.MovePiece(Vector2f(-BLOCK_SIZE, 0));
                         break;
-                    case sf::Keyboard::Q: piece.rotate(90); break;
-                    case sf::Keyboard::F: piece.rotate(-90); break;
+                    case sf::Keyboard::Q: board.RotatePiece(90); break;
+                    case sf::Keyboard::F: board.RotatePiece(-90); break;
                     case sf::Keyboard::Space:
-                        if (board.PushPiece(piece) == EXIT_SUCCESS)
+                        if (board.PushPiece() == EXIT_SUCCESS)
                         {
-                            piece =
-                                Piece(64, 64, BLOCK_SIZE, Piece::Mino::Random);
+                            board.SpawnPiece();
                         }
                         break;
 
@@ -72,7 +71,7 @@ int main()
         // Draw
         window.clear();
         board.draw(window);
-        piece.draw(window);
+        // piece.draw(window);
         window.display();
     }
     return EXIT_SUCCESS;
