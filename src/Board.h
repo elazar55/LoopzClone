@@ -17,16 +17,17 @@ using vector2D = vector<vector<T>>;
 class Board
 {
     private:
-        const int       m_rows;
-        const int       m_columns;
-        float           m_size;
-        Vector2f        m_pos;
-        VertexArray     hLines;
-        VertexArray     vLines;
-        vector2D<Block> grid;
+        const int       rows_;
+        const int       columns_;
+        float           size_;
+        Vector2f        position_;
+        VertexArray     gridlines_h_;
+        VertexArray     gridlines_v_;
+        vector2D<Block> grid_;
         Piece           piece_;
 
-        Vector2f BlockIndex(Vector2f position, Vector2f size) const;
+        Vector2i BlockIndex(Vector2f block_pos, Vector2f block_size) const;
+        bool     InBounds(Vector2i index) const;
 
     public:
         Board(size_t rows, size_t columns, float size, Vector2f pos);
@@ -34,8 +35,9 @@ class Board
         bool PushPiece();
         void MovePiece(Vector2f direction);
         void RotatePiece(float angle);
-        void draw(RenderWindow& window);
+        void Draw(RenderWindow& window);
         void SpawnPiece();
+        void CheckLoop();
 };
 
 #endif

@@ -52,7 +52,7 @@ void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
     {
         blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
         blocks.push_back(Block(BLOCK_TOP, size, DOOR_TOP | DOOR_BOTTOM));
-        blocks.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_BOTTOM));
+        blocks.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_LEFT));
         blocks.push_back(
             Block(BLOCK_BOTTOM_LEFT, size, DOOR_LEFT | DOOR_RIGHT));
     }

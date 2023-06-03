@@ -9,10 +9,10 @@ using namespace sf;
 using namespace std;
 
 #define DOOR_NON    bitset<4>(0)
-#define DOOR_TOP    bitset<4>(8)
-#define DOOR_RIGHT  bitset<4>(4)
-#define DOOR_BOTTOM bitset<4>(2)
-#define DOOR_LEFT   bitset<4>(1)
+#define DOOR_TOP    bitset<4>(8) // 1 0 0 0
+#define DOOR_RIGHT  bitset<4>(4) // 0 1 0 0
+#define DOOR_BOTTOM bitset<4>(2) // 0 0 1 0
+#define DOOR_LEFT   bitset<4>(1) // 0 0 0 1
 
 #define BLOCK_CENTER       Vector2f(x, y)
 #define BLOCK_TOP          Vector2f(x, y - size)
@@ -38,13 +38,15 @@ class Block
         Block();
         Block(Vector2f pos, float size, const bitset<4> doors = bitset<4>(0));
 
-        Vector2f Position() const;
-        Vector2f Size() const;
-        void     SetDoors(bitset<4> doors);
-        void     Move(Vector2f direction);
-        void     Rotate(float degrees, const Vector2f& origin);
-        void     Draw(RenderWindow& window);
-        bool     IsEmpty() const;
+        Vector2f  Position() const;
+        Vector2f  Size() const;
+        void      SetDoors(bitset<4> doors);
+        bitset<4> Doors() const;
+        void      Move(Vector2f direction);
+        void      Rotate(float degrees, const Vector2f& origin);
+        void      Draw(RenderWindow& window);
+        bool      IsEmpty() const;
+        void      SetColor(sf::Color color);
 
         template<typename T>
         int Dot(T a, T b, size_t length);
