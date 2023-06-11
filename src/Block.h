@@ -35,6 +35,14 @@ class Block
         RectangleShape shape_;
 
     public:
+        enum Door
+        {
+            TOP_INDEX,
+            RIGHT_INDEX,
+            BOTTOM_INDEX,
+            LEFT_INDEX,
+        };
+
         Block();
         Block(Vector2f pos, float size, const bitset<4> doors = bitset<4>(0));
 
