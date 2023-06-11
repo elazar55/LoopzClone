@@ -7,6 +7,45 @@
 using namespace std;
 
 /* ========================================================================== */
+/*                                 Constructor                                */
+/* ========================================================================== */
+Board::Board(size_t columns, size_t rows, float size, Vector2f pos) :
+    columns_(columns),
+    rows_(rows),
+    size_(size),
+    position_(pos),
+    grid_(vector2D<Block>(columns, vector<Block>(rows))),
+    piece_(128, 128, 32, Piece::Mino::Random)
+{
+    gridlines_h_.setPrimitiveType(Lines);
+    gridlines_v_.setPrimitiveType(Lines);
+
+    for (size_t i = 0; i <= rows; i++)
+    {
+        float offset = size * i;
+        float width  = columns * size;
+
+        Vector2f start(pos.x, pos.y + offset);
+        Vector2f end(pos.x + width, pos.y + offset);
+
+        gridlines_h_.append(start);
+        gridlines_h_.append(end);
+    }
+
+    for (size_t i = 0; i <= columns; i++)
+    {
+        float offset = size * i;
+        float height = rows * size;
+
+        Vector2f start(pos.x + offset, pos.y);
+        Vector2f end(pos.x + offset, pos.y + height);
+
+        gridlines_v_.append(start);
+        gridlines_v_.append(end);
+    }
+}
+
+/* ========================================================================== */
 /*                                 Block Index                                */
 /* ========================================================================== */
 Vector2i Board::BlockIndex(Vector2f block_pos, Vector2f block_size) const
@@ -22,49 +61,13 @@ Vector2i Board::BlockIndex(Vector2f block_pos, Vector2f block_size) const
 /* ========================================================================== */
 bool Board::InBounds(Vector2i index) const
 {
-    if (index.x >= rows_ || index.y >= columns_ || index.x < 0 || index.y < 0)
+    int columns = grid_.size();
+    int rows    = grid_.back().size();
+
+    if (index.x >= columns || index.y >= rows || index.x < 0 || index.y < 0)
         return false;
 
     return true;
-}
-
-/* ========================================================================== */
-/*                                 Constructor                                */
-/* ========================================================================== */
-Board::Board(size_t rows, size_t columns, float size, Vector2f pos) :
-    rows_(rows),
-    columns_(columns),
-    size_(size),
-    position_(pos),
-    grid_(vector2D<Block>(rows, vector<Block>(columns))),
-    piece_(128, 128, 32, Piece::Mino::Random)
-{
-    gridlines_h_.setPrimitiveType(Lines);
-    gridlines_v_.setPrimitiveType(Lines);
-
-    for (size_t i = 0; i <= columns; i++)
-    {
-        float offset = size * i;
-        float width  = rows * size;
-
-        Vector2f start(pos.x, pos.y + offset);
-        Vector2f end(pos.x + width, pos.y + offset);
-
-        gridlines_h_.append(start);
-        gridlines_h_.append(end);
-    }
-
-    for (size_t i = 0; i <= rows; i++)
-    {
-        float offset = size * i;
-        float height = columns * size;
-
-        Vector2f start(pos.x + offset, pos.y);
-        Vector2f end(pos.x + offset, pos.y + height);
-
-        gridlines_v_.append(start);
-        gridlines_v_.append(end);
-    }
 }
 
 /* ========================================================================== */
@@ -154,62 +157,90 @@ void Board::SpawnPiece()
 /* ========================================================================== */
 /*                                 Check Loop                                 */
 /* ========================================================================== */
-void Board::CheckLoop()
+bool Board::CheckLoop()
 {
-    const Vector2i& start      = BlockIndex(piece_.Blocks().back().Position(),
-                                            piece_.Blocks().back().Size());
-    Vector2i        next_index = start;
+    const Vector2i& start   = BlockIndex(piece_.Blocks().back().Position(),
+                                         piece_.Blocks().back().Size());
+    int             columns = grid_.size();
+    int             rows    = grid_.back().size();
+    Vector2i        index   = start;
     bitset<4U>      direction{0};
 
-    cout << "----------------------" << endl;
-    for (int i = 0; i < 9; i++)
-    {
-        cout << "Direction: ";
-        if ((direction & DOOR_TOP) == DOOR_TOP) cout << "Up";
-        if ((direction & DOOR_RIGHT) == DOOR_RIGHT) cout << "Right";
-        if ((direction & DOOR_BOTTOM) == DOOR_BOTTOM) cout << "Down";
-        if ((direction & DOOR_LEFT) == DOOR_LEFT) cout << "Left";
-        cout << "\tNow: ";
+    grid_[index.x][index.y].SetColor(Color::Cyan);
 
-        if (!InBounds(next_index) ||
-            grid_[next_index.x][next_index.y].IsEmpty())
-        {
-            cout << endl << "----------------------" << endl;
-            return;
-        }
-        grid_[next_index.x][next_index.y].SetColor(sf::Color::Green);
+    cout << "-----------------------------------------------" << endl;
 
-        if (((grid_[next_index.x][next_index.y].Doors() & DOOR_TOP) ==
-             DOOR_TOP) &&
-            direction != DOOR_BOTTOM)
+    do {
+        Block& block = grid_[index.x][index.y];
+        if (direction.any()) block.SetColor(sf::Color::Green);
+
+        /* =========================== Checks top =========================== */
+        if (block.Doors()[Block::Door::TOP_INDEX] && direction != DOOR_BOTTOM &&
+            index.y > 0)
         {
-            cout << "Up" << endl;
-            direction = DOOR_TOP;
-            next_index.y--;
+            Block& adjacent = grid_[index.x][index.y - 1];
+            if (adjacent.Doors()[Block::Door::BOTTOM_INDEX])
+            {
+                direction = DOOR_TOP;
+                index.y--;
+                cout << "Up"
+                     << " | ";
+                continue;
+            }
         }
-        else if (((grid_[next_index.x][next_index.y].Doors() & DOOR_RIGHT) ==
-                  DOOR_RIGHT) &&
-                 direction != DOOR_LEFT)
+
+        /* ========================== Checks right ========================== */
+        if (block.Doors()[Block::Door::RIGHT_INDEX] && direction != DOOR_LEFT &&
+            index.x < columns - 1)
         {
-            cout << "Right" << endl;
-            direction = DOOR_RIGHT;
-            next_index.x++;
+            Block& adjacent = grid_[index.x + 1][index.y];
+            if (adjacent.Doors()[Block::Door::LEFT_INDEX])
+            {
+                direction = DOOR_RIGHT;
+                index.x++;
+                cout << "Right"
+                     << " | ";
+                continue;
+            }
         }
-        else if (((grid_[next_index.x][next_index.y].Doors() & DOOR_BOTTOM) ==
-                  DOOR_BOTTOM) &&
-                 direction != DOOR_TOP)
+
+        /* ========================== Checks bottom ========================= */
+        if (block.Doors()[Block::Door::BOTTOM_INDEX] && direction != DOOR_TOP &&
+            index.y < rows - 1)
         {
-            cout << "Down" << endl;
-            direction = DOOR_BOTTOM;
-            next_index.y++;
+            Block& adjacent = grid_[index.x][index.y + 1];
+            if (adjacent.Doors()[Block::Door::TOP_INDEX])
+            {
+                direction = DOOR_BOTTOM;
+                index.y++;
+                cout << "Down"
+                     << " | ";
+                continue;
+            }
         }
-        else if (((grid_[next_index.x][next_index.y].Doors() & DOOR_LEFT) ==
-                  DOOR_LEFT) &&
-                 direction != DOOR_RIGHT)
+
+        /* =========================== Checks left ========================== */
+        if (block.Doors()[Block::Door::LEFT_INDEX] && direction != DOOR_RIGHT &&
+            index.x > 0)
         {
-            cout << "Left" << endl;
-            direction = DOOR_LEFT;
-            next_index.x--;
+            Block& adjacent = grid_[index.x - 1][index.y];
+            if (adjacent.Doors()[Block::Door::RIGHT_INDEX])
+            {
+                direction = DOOR_LEFT;
+                index.x--;
+                cout << "Left"
+                     << " | ";
+                continue;
+            }
         }
-    }
+
+        /* ====================== Stop, out of options ====================== */
+        cout << endl;
+        return false;
+
+    } while ((index != start));
+
+    /* =========================== Loop successful ========================== */
+    cout << "Loop" << endl;
+    return true;
 }

@@ -17,8 +17,8 @@ using vector2D = vector<vector<T>>;
 class Board
 {
     private:
-        const int       rows_;
         const int       columns_;
+        const int       rows_;
         float           size_;
         Vector2f        position_;
         VertexArray     gridlines_h_;
@@ -37,7 +37,7 @@ class Board
         void RotatePiece(float angle);
         void Draw(RenderWindow& window);
         void SpawnPiece();
-        void CheckLoop();
+        bool CheckLoop();
 };
 
 #endif

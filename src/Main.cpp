@@ -16,8 +16,8 @@ int main()
     // Parameters
     const int WINDOW_WIDTH  = 640;
     const int WINDOW_HEIGHT = 480;
-    const int GRID_WIDTH    = 18;
-    const int GRID_HEIGHT   = 7;
+    const int GRID_COLUMNS  = 18;
+    const int GRID_ROWS     = 7;
     const int BLOCK_SIZE    = 32;
 
     // Main GUI window
@@ -25,7 +25,7 @@ int main()
                             "SFML works!");
 
     // Game objects
-    Board board(GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, Vector2f(32, 32));
+    Board board(GRID_COLUMNS, GRID_ROWS, BLOCK_SIZE, Vector2f(32, 32));
 
     // Game loop
     while (window.isOpen())
