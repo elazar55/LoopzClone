@@ -54,6 +54,7 @@ int start()
             if (event.type == sf::Event::Closed) window.close();
             if (event.type == event.KeyPressed)
             {
+                // TODO: Input design
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Escape: window.close(); break;
@@ -71,18 +72,13 @@ int start()
                         break;
                     case sf::Keyboard::Q: board.RotatePiece(90); break;
                     case sf::Keyboard::F: board.RotatePiece(-90); break;
-                    case sf::Keyboard::P:
-                    {
-                        // TODO: Clear entire board in a better way
-                        vector<Vector2i> all;
-                        board.Clear(all);
-                        break;
-                    }
+                    case sf::Keyboard::P: board.Clear(); break;
                     case sf::Keyboard::Space:
                         if (board.PushPiece() == EXIT_SUCCESS)
                         {
                             vector<Vector2i> result(board.CheckLoop());
 
+                            // TODO: Wasteful empty vector when no loop
                             if (result.size() > 0) board.Clear(result);
 
                             board.SpawnPiece();

@@ -38,6 +38,7 @@ class Board
         void             Draw(RenderWindow& window);
         void             SpawnPiece();
         void             Clear(vector<Vector2i> indices);
+        void             Clear();
         vector<Vector2i> CheckLoop();
 };
 

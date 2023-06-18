@@ -132,7 +132,6 @@ void Board::Draw(RenderWindow& window)
 {
     window.draw(gridlines_h_);
     window.draw(gridlines_v_);
-    piece_.draw(window);
 
     for (size_t x = 0; x < grid_.size(); x++)
     {
@@ -144,6 +143,7 @@ void Board::Draw(RenderWindow& window)
             }
         }
     }
+    piece_.draw(window);
 }
 
 /* ========================================================================== */
@@ -157,13 +157,13 @@ void Board::SpawnPiece()
 /* ========================================================================== */
 /*                                    Clear                                   */
 /* ========================================================================== */
+void Board::Clear()
+{
+    grid_ = (vector2D<Block>(columns_, vector<Block>(rows_)));
+}
+
 void Board::Clear(vector<Vector2i> indices)
 {
-    if (indices.empty())
-    {
-        grid_ = (vector2D<Block>(columns_, vector<Block>(rows_)));
-        return;
-    }
     for (auto&& i : indices)
     {
         grid_[i.x][i.y] = Block();
