@@ -157,12 +157,23 @@ void Board::SpawnPiece()
 /* ========================================================================== */
 /*                                    Clear                                   */
 /* ========================================================================== */
-void Board::Clear() {}
+void Board::Clear(vector<Vector2i> indices)
+{
+    if (indices.empty())
+    {
+        grid_ = (vector2D<Block>(columns_, vector<Block>(rows_)));
+        return;
+    }
+    for (auto&& i : indices)
+    {
+        grid_[i.x][i.y] = Block();
+    }
+}
 
 /* ========================================================================== */
 /*                                 Check Loop                                 */
 /* ========================================================================== */
-bool Board::CheckLoop()
+vector<Vector2i> Board::CheckLoop()
 {
     const Vector2i&  start   = BlockIndex(piece_.Blocks().back().Position(),
                                           piece_.Blocks().back().Size());
@@ -243,16 +254,10 @@ bool Board::CheckLoop()
 
         /* ====================== Stop, out of options ====================== */
         cout << endl;
-        return false;
+        return vector<Vector2i>();
 
     } while ((index != start));
 
     /* =========================== Loop successful ========================== */
-    cout << "Loop" << endl;
-    for (auto&& i : checkedIndices)
-    {
-        cout << i.x << " " << i.y << endl;
-    }
-
-    return true;
+    return checkedIndices;
 }

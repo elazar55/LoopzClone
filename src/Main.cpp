@@ -11,6 +11,8 @@
 /*                                    Main                                    */
 /* ========================================================================== */
 
+int start();
+
 extern "C" void AsmTest()
 {
     int assembly(int x, int y);
@@ -20,7 +22,7 @@ extern "C" void AsmTest()
 
 int main()
 {
-    AsmTest();
+    start();
     return 0;
 }
 
@@ -69,10 +71,20 @@ int start()
                         break;
                     case sf::Keyboard::Q: board.RotatePiece(90); break;
                     case sf::Keyboard::F: board.RotatePiece(-90); break;
+                    case sf::Keyboard::P:
+                    {
+                        // TODO: Clear entire board in a better way
+                        vector<Vector2i> all;
+                        board.Clear(all);
+                        break;
+                    }
                     case sf::Keyboard::Space:
                         if (board.PushPiece() == EXIT_SUCCESS)
                         {
-                            board.CheckLoop();
+                            vector<Vector2i> result(board.CheckLoop());
+
+                            if (result.size() > 0) board.Clear(result);
+
                             board.SpawnPiece();
                         }
                         break;
@@ -85,7 +97,6 @@ int start()
         // Draw
         window.clear();
         board.Draw(window);
-        // piece.draw(window);
         window.display();
     }
     return EXIT_SUCCESS;

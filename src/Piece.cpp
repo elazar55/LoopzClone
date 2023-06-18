@@ -19,6 +19,7 @@ Piece::Piece(float x, float y, float size, Mino mino)
 /* ========================================================================== */
 void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
 {
+    // TODO: Add 3 block shapes
     if (mino == Random)
     {
         mino = Mino(rand() % Random);
