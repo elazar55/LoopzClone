@@ -10,7 +10,21 @@
 /* ========================================================================== */
 /*                                    Main                                    */
 /* ========================================================================== */
+
+extern "C" void AsmTest()
+{
+    int assembly(int x, int y);
+    int i = assembly(6, 4);
+    cout << i << endl;
+}
+
 int main()
+{
+    AsmTest();
+    return 0;
+}
+
+int start()
 {
     srand(time(NULL));
     // Parameters

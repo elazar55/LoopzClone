@@ -26,7 +26,14 @@ void Piece::ConstructMino(float x, float y, float size, Piece::Mino mino)
 
     if (mino == Single)
     {
-        blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
+        uint8_t roll = rand() % 3;
+
+        if (roll == 0)
+            blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
+        else if (roll == 1)
+            blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_LEFT));
+        else if (roll == 2)
+            blocks.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_RIGHT));
     }
     else if (mino == S)
     {

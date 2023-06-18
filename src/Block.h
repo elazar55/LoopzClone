@@ -37,10 +37,10 @@ class Block
     public:
         enum Door
         {
-            TOP_INDEX,
-            RIGHT_INDEX,
-            BOTTOM_INDEX,
             LEFT_INDEX,
+            BOTTOM_INDEX,
+            RIGHT_INDEX,
+            TOP_INDEX,
         };
 
         Block();

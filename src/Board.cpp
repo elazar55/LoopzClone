@@ -155,16 +155,22 @@ void Board::SpawnPiece()
 }
 
 /* ========================================================================== */
+/*                                    Clear                                   */
+/* ========================================================================== */
+void Board::Clear() {}
+
+/* ========================================================================== */
 /*                                 Check Loop                                 */
 /* ========================================================================== */
 bool Board::CheckLoop()
 {
-    const Vector2i& start   = BlockIndex(piece_.Blocks().back().Position(),
-                                         piece_.Blocks().back().Size());
-    int             columns = grid_.size();
-    int             rows    = grid_.back().size();
-    Vector2i        index   = start;
-    bitset<4U>      direction{0};
+    const Vector2i&  start   = BlockIndex(piece_.Blocks().back().Position(),
+                                          piece_.Blocks().back().Size());
+    int              columns = grid_.size();
+    int              rows    = grid_.back().size();
+    Vector2i         index   = start;
+    bitset<4U>       direction{0};
+    vector<Vector2i> checkedIndices;
 
     grid_[index.x][index.y].SetColor(Color::Cyan);
 
@@ -172,6 +178,7 @@ bool Board::CheckLoop()
 
     do {
         Block& block = grid_[index.x][index.y];
+        checkedIndices.push_back(index);
         if (direction.any()) block.SetColor(sf::Color::Green);
 
         /* =========================== Checks top =========================== */
@@ -242,5 +249,10 @@ bool Board::CheckLoop()
 
     /* =========================== Loop successful ========================== */
     cout << "Loop" << endl;
+    for (auto&& i : checkedIndices)
+    {
+        cout << i.x << " " << i.y << endl;
+    }
+
     return true;
 }

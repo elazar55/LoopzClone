@@ -37,6 +37,7 @@ class Board
         void RotatePiece(float angle);
         void Draw(RenderWindow& window);
         void SpawnPiece();
+        void Clear();
         bool CheckLoop();
 };
 

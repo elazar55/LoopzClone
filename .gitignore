@@ -2,4 +2,4 @@
 *.o
 *.d
 *.json
-bin/
+build/
