@@ -173,7 +173,7 @@ void Board::Clear(vector<Vector2i> indices)
 /* ========================================================================== */
 /*                                 Check Loop                                 */
 /* ========================================================================== */
-vector<Vector2i> Board::CheckLoop()
+vector<Vector2i>* Board::CheckLoop()
 {
     const Vector2i&  start   = BlockIndex(piece_.Blocks().back().Position(),
                                           piece_.Blocks().back().Size());
@@ -254,10 +254,10 @@ vector<Vector2i> Board::CheckLoop()
 
         /* ====================== Stop, out of options ====================== */
         cout << endl;
-        return vector<Vector2i>();
+        return nullptr;
 
     } while ((index != start));
 
     /* =========================== Loop successful ========================== */
-    return checkedIndices;
+    return new vector<Vector2i>(checkedIndices);
 }

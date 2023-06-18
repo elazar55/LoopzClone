@@ -76,11 +76,13 @@ int start()
                     case sf::Keyboard::Space:
                         if (board.PushPiece() == EXIT_SUCCESS)
                         {
-                            vector<Vector2i> result(board.CheckLoop());
+                            vector<Vector2i>* indices(board.CheckLoop());
 
-                            // TODO: Wasteful empty vector when no loop
-                            if (result.size() > 0) board.Clear(result);
-
+                            if (indices != nullptr)
+                            {
+                                board.Clear(*indices);
+                                delete indices;
+                            }
                             board.SpawnPiece();
                         }
                         break;

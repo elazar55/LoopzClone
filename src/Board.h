@@ -32,14 +32,14 @@ class Board
     public:
         Board(size_t rows, size_t columns, float size, Vector2f pos);
 
-        bool             PushPiece();
-        void             MovePiece(Vector2f direction);
-        void             RotatePiece(float angle);
-        void             Draw(RenderWindow& window);
-        void             SpawnPiece();
-        void             Clear(vector<Vector2i> indices);
-        void             Clear();
-        vector<Vector2i> CheckLoop();
+        bool              PushPiece();
+        void              MovePiece(Vector2f direction);
+        void              RotatePiece(float angle);
+        void              Draw(RenderWindow& window);
+        void              SpawnPiece();
+        void              Clear(vector<Vector2i> indices);
+        void              Clear();
+        vector<Vector2i>* CheckLoop();
 };
 
 #endif
