@@ -5,6 +5,7 @@
 #include "Piece.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include <stdlib.h>
 
 /* ========================================================================== */
@@ -55,6 +56,7 @@ int start()
             if (event.type == event.KeyPressed)
             {
                 // TODO: Input design
+                Clock clock;
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Escape: window.close(); break;
@@ -86,9 +88,9 @@ int start()
                             board.SpawnPiece();
                         }
                         break;
-
                     default: break;
                 }
+                cout << clock.restart().asMicroseconds() << " us\n";
             }
         }
 

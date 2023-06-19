@@ -185,8 +185,6 @@ vector<Vector2i>* Board::CheckLoop()
 
     grid_[index.x][index.y].SetColor(Color::Cyan);
 
-    cout << "-----------------------------------------------" << endl;
-
     do {
         Block& block = grid_[index.x][index.y];
         checkedIndices.push_back(index);
@@ -201,8 +199,6 @@ vector<Vector2i>* Board::CheckLoop()
             {
                 direction = DOOR_TOP;
                 index.y--;
-                cout << "Up"
-                     << " | ";
                 continue;
             }
         }
@@ -216,8 +212,6 @@ vector<Vector2i>* Board::CheckLoop()
             {
                 direction = DOOR_RIGHT;
                 index.x++;
-                cout << "Right"
-                     << " | ";
                 continue;
             }
         }
@@ -231,8 +225,6 @@ vector<Vector2i>* Board::CheckLoop()
             {
                 direction = DOOR_BOTTOM;
                 index.y++;
-                cout << "Down"
-                     << " | ";
                 continue;
             }
         }
@@ -246,8 +238,6 @@ vector<Vector2i>* Board::CheckLoop()
             {
                 direction = DOOR_LEFT;
                 index.x--;
-                cout << "Left"
-                     << " | ";
                 continue;
             }
         }
@@ -255,8 +245,8 @@ vector<Vector2i>* Board::CheckLoop()
         /* ====================== Stop, out of options ====================== */
         cout << endl;
         return nullptr;
-
-    } while ((index != start));
+    }
+    while ((index != start));
 
     /* =========================== Loop successful ========================== */
     return new vector<Vector2i>(checkedIndices);
