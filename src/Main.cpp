@@ -9,11 +9,8 @@
 #include <stdlib.h>
 
 /* ========================================================================== */
-/*                                    Main                                    */
+/*                                    Tests                                   */
 /* ========================================================================== */
-
-int start();
-
 extern "C" void AsmTest()
 {
     int assembly(int x, int y);
@@ -21,42 +18,36 @@ extern "C" void AsmTest()
     cout << i << endl;
 }
 
-int main()
-{
-    start();
-    return 0;
-}
-
+/* ========================================================================== */
+/*                                Primary Entry                               */
+/* ========================================================================== */
 int start()
 {
-    srand(time(NULL));
-    // Parameters
+    // --------------------------- Initialization ------------------------------
     const int WINDOW_WIDTH  = 640;
     const int WINDOW_HEIGHT = 480;
-    const int GRID_COLUMNS  = 18;
-    const int GRID_ROWS     = 7;
+    const int COLUMNS       = 18;
+    const int ROWS          = 7;
     const int BLOCK_SIZE    = 32;
 
-    // Main GUI window
-    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
-                            "SFML works!");
+    RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
+    Board        board(COLUMNS, ROWS, BLOCK_SIZE, Vector2f(32, 32));
 
-    // Game objects
-    Board board(GRID_COLUMNS, GRID_ROWS, BLOCK_SIZE, Vector2f(32, 32));
-
-    // Game loop
+    srand(time(NULL));
+    // ------------------------------ Game Loop --------------------------------
     while (window.isOpen())
     {
         sf::Event event;
 
-        // Event queue
+        // --------------------------- Event queue -----------------------------
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed) window.close();
             if (event.type == event.KeyPressed)
             {
-                // TODO: Input design
+                // TODO: Input Handler Class
                 Clock clock;
+
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Escape: window.close(); break;
@@ -94,10 +85,19 @@ int start()
             }
         }
 
-        // Draw
+        // ------------------------------ Draw ---------------------------------
         window.clear();
         board.Draw(window);
         window.display();
     }
     return EXIT_SUCCESS;
+}
+
+/* ========================================================================== */
+/*                                    Main                                    */
+/* ========================================================================== */
+int main()
+{
+    start();
+    return 0;
 }

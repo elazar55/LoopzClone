@@ -20,6 +20,7 @@ Board::Board(size_t columns, size_t rows, float size, Vector2f pos) :
     gridlines_h_.setPrimitiveType(Lines);
     gridlines_v_.setPrimitiveType(Lines);
 
+    // ------------------------ Horizontal Gridlines ---------------------------
     for (size_t i = 0; i <= rows; i++)
     {
         float offset = size * i;
@@ -32,6 +33,7 @@ Board::Board(size_t columns, size_t rows, float size, Vector2f pos) :
         gridlines_h_.append(end);
     }
 
+    // ------------------------- Vertical Gridlines ----------------------------
     for (size_t i = 0; i <= columns; i++)
     {
         float offset = size * i;

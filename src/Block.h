@@ -34,7 +34,7 @@ class Block
         bitset<4>      doors_;
         RectangleShape shape_;
 
-    public:
+    public: // TODO: Extract Door to a class
         enum Door
         {
             LEFT_INDEX,
@@ -43,19 +43,22 @@ class Block
             TOP_INDEX,
         };
 
+        // -------------------------- Constructors -----------------------------
         Block();
         Block(Vector2f pos, float size, const bitset<4> doors = bitset<4>(0));
 
+        // --------------------------- Inspectors ------------------------------
         Vector2f  Position() const;
-        Vector2f  Size() const;
-        void      SetDoors(bitset<4> doors);
-        bitset<4> Doors() const;
-        void      Move(Vector2f direction);
-        void      Rotate(float degrees, const Vector2f& origin);
-        void      Draw(RenderWindow& window);
         bool      IsEmpty() const;
-        void      SetColor(sf::Color color);
+        bitset<4> Doors() const;
+        Vector2f  Size() const;
 
+        // ---------------------------- Mutators -------------------------------
+        void SetDoors(bitset<4> doors);
+        void Move(Vector2f direction);
+        void Rotate(float degrees, const Vector2f& origin);
+        void Draw(RenderWindow& window);
+        void SetColor(sf::Color color);
         template<typename T>
         int Dot(T a, T b, size_t length);
 };
