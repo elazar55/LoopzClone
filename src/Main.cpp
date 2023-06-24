@@ -2,6 +2,7 @@
 /*                                   Headers                                  */
 /* ========================================================================== */
 #include "Board.h"
+#include "EventHandler.h"
 #include "Piece.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -32,13 +33,11 @@ int start()
 
     RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
     Board        board(COLUMNS, ROWS, BLOCK_SIZE, Vector2f(32, 32));
-
     srand(time(NULL));
     // ------------------------------ Game Loop --------------------------------
     while (window.isOpen())
     {
         sf::Event event;
-
         // --------------------------- Event queue -----------------------------
         while (window.pollEvent(event))
         {
@@ -47,7 +46,6 @@ int start()
             {
                 // TODO: Input Handler Class
                 Clock clock;
-
                 switch (event.key.code)
                 {
                     case sf::Keyboard::Escape: window.close(); break;
@@ -70,7 +68,6 @@ int start()
                         if (board.PushPiece() == EXIT_SUCCESS)
                         {
                             vector<Vector2i>* indices(board.CheckLoop());
-
                             if (indices != nullptr)
                             {
                                 board.Clear(*indices);
@@ -84,7 +81,6 @@ int start()
                 cout << clock.restart().asMicroseconds() << " us\n";
             }
         }
-
         // ------------------------------ Draw ---------------------------------
         window.clear();
         board.Draw(window);
