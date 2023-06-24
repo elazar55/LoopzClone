@@ -2,7 +2,6 @@
 /*                                   Headers                                  */
 /* ========================================================================== */
 #include "Board.h"
-#include "EventHandler.h"
 #include "Piece.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
