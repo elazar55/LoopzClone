@@ -18,6 +18,12 @@ extern "C" void AsmTest()
     cout << i << endl;
 }
 
+template<typename T, typename... Args>
+void KeyTest(void (T::*func)(Args...), T& object, Args... args)
+{
+    (object.*func)(args...);
+}
+
 /* ========================================================================== */
 /*                                Primary Entry                               */
 /* ========================================================================== */
@@ -49,7 +55,9 @@ int start()
                 {
                     case sf::Keyboard::Escape: window.close(); break;
                     case sf::Keyboard::W:
-                        board.MovePiece(Vector2f(0, -BLOCK_SIZE));
+                        // board.MovePiece(Vector2f(0, -BLOCK_SIZE));
+                        KeyTest(&Board::MovePiece, board,
+                                Vector2f(0, -BLOCK_SIZE));
                         break;
                     case sf::Keyboard::R:
                         board.MovePiece(Vector2f(0, BLOCK_SIZE));
