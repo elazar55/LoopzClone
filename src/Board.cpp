@@ -15,7 +15,7 @@ Board::Board(size_t columns, size_t rows, float size, Vector2f pos) :
     size_(size),
     position_(pos),
     grid_(vector2D<Block>(columns, vector<Block>(rows))),
-    piece_(128, 128, 32, Piece::Mino::Random)
+    piece_(128, 128, 32)
 {
     gridlines_h_.setPrimitiveType(Lines);
     gridlines_v_.setPrimitiveType(Lines);
@@ -153,7 +153,7 @@ void Board::Draw(RenderWindow& window)
 /* ========================================================================== */
 void Board::SpawnPiece()
 {
-    piece_ = Piece(128, 128, 32, Piece::Mino::Random);
+    piece_ = Piece(128, 128, 32);
 }
 
 /* ========================================================================== */
@@ -245,7 +245,6 @@ vector<Vector2i>* Board::CheckLoop()
         }
 
         /* ====================== Stop, out of options ====================== */
-        cout << endl;
         return nullptr;
     }
     while ((index != start));
