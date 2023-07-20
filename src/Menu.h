@@ -1,8 +1,8 @@
 /* ========================================================================== */
 /*                                   Headers                                  */
 /* ========================================================================== */
-#ifndef GAME_H
-#define GAME_H
+#ifndef MENU_H
+#define MENU_H
 
 #include "Board.h"
 #include "Piece.h"
@@ -12,21 +12,14 @@
 #include <stdlib.h>
 
 // =============================================================================
-//                                 Class Game
+//                                 Class Menu
 // =============================================================================
-class Game
+class Menu
 {
     public:
-        Game();
-        ~Game();
-        void Draw();
-        void CreateGame(int columns, int rows, int block_size);
-        void CreateWindow(int width, int height);
 
     private:
-        RenderWindow window_;
-        Event        event_;
-        Board        board_;
+        sf::Text new_game_text_;
 };
 
-#endif // GAME_H
+#endif // MENU_H

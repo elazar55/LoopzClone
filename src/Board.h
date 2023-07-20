@@ -14,8 +14,8 @@ using vector2D = vector<vector<T>>;
 class Board
 {
     private:
-        const int       columns_;
-        const int       rows_;
+        int             columns_;
+        int             rows_;
         float           size_;
         Vector2f        position_;
         VertexArray     gridlines_h_;
@@ -36,6 +36,7 @@ class Board
         void              SpawnPiece();
         void              Clear(vector<Vector2i> indices);
         void              Clear();
+        void              Input(Event& event);
         vector<Vector2i>* CheckLoop();
 };
 

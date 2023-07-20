@@ -9,7 +9,7 @@ using namespace std;
 /* ========================================================================== */
 /*                                 Constructor                                */
 /* ========================================================================== */
-Board::Board(size_t columns, size_t rows, float size, Vector2f pos) :
+Board::Board(size_t rows, size_t columns, float size, Vector2f pos) :
     columns_(columns),
     rows_(rows),
     size_(size),
@@ -153,6 +153,7 @@ void Board::Draw(RenderWindow& window)
 /* ========================================================================== */
 void Board::SpawnPiece()
 {
+    // TODO: Piece position
     piece_ = Piece(128, 128, 32);
 }
 
@@ -162,6 +163,39 @@ void Board::SpawnPiece()
 void Board::Clear()
 {
     grid_ = (vector2D<Block>(columns_, vector<Block>(rows_)));
+}
+
+// =============================================================================
+//                                    Input
+// =============================================================================
+void Board::Input(Event& event)
+{
+    if (event.type == event.KeyPressed)
+    {
+        switch (event.key.code)
+        {
+            case sf::Keyboard::W: MovePiece(Vector2f(0, -32)); break;
+            case sf::Keyboard::R: MovePiece(Vector2f(0, 32)); break;
+            case sf::Keyboard::S: MovePiece(Vector2f(32, 0)); break;
+            case sf::Keyboard::A: MovePiece(Vector2f(-32, 0)); break;
+            case sf::Keyboard::Q: RotatePiece(90); break;
+            case sf::Keyboard::F: RotatePiece(-90); break;
+            case sf::Keyboard::P: Clear(); break;
+            case sf::Keyboard::Space:
+                if (PushPiece() == EXIT_SUCCESS)
+                {
+                    vector<Vector2i>* indices(CheckLoop());
+                    if (indices != nullptr)
+                    {
+                        Clear(*indices);
+                        delete indices;
+                    }
+                    SpawnPiece();
+                }
+                break;
+            default: break;
+        }
+    }
 }
 
 void Board::Clear(vector<Vector2i> indices)
