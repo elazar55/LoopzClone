@@ -12,10 +12,8 @@ using namespace std;
 Board::Board(size_t rows, size_t columns, float size, Vector2f pos) :
     columns_(columns),
     rows_(rows),
-    size_(size),
     position_(pos),
-    grid_(vector2D<Block>(columns, vector<Block>(rows))),
-    piece_(128, 128, 32)
+    grid_(vector2D<Block>(columns, vector<Block>(rows)))
 {
     gridlines_h_.setPrimitiveType(Lines);
     gridlines_v_.setPrimitiveType(Lines);
@@ -151,10 +149,10 @@ void Board::Draw(RenderWindow& window)
 /* ========================================================================== */
 /*                                 Spawn Piece                                */
 /* ========================================================================== */
-void Board::SpawnPiece()
+void Board::SpawnPiece(float x, float y, float size)
 {
     // TODO: Piece position
-    piece_ = Piece(128, 128, 32);
+    piece_ = Piece(x, y, size);
 }
 
 /* ========================================================================== */
@@ -190,7 +188,7 @@ void Board::Input(Event& event)
                         Clear(*indices);
                         delete indices;
                     }
-                    SpawnPiece();
+                    SpawnPiece(128, 128, 32);
                 }
                 break;
             default: break;
@@ -216,7 +214,7 @@ vector<Vector2i>* Board::CheckLoop()
     int              columns = grid_.size();
     int              rows    = grid_.back().size();
     Vector2i         index   = start;
-    bitset<4U>       direction{0};
+    bitset<4U>       direction{ 0 };
     vector<Vector2i> checkedIndices;
 
     grid_[index.x][index.y].SetColor(Color::Cyan);
@@ -285,4 +283,8 @@ vector<Vector2i>* Board::CheckLoop()
 
     /* =========================== Loop successful ========================== */
     return new vector<Vector2i>(checkedIndices);
+}
+
+void Board::MakeGrid(uint8_t rows, uint8_t columns)
+{
 }

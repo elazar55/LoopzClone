@@ -47,7 +47,7 @@ void ComputedGotoTest(RenderWindow& window, Board& board)
                 board.Clear(*indices);
                 delete indices;
             }
-            board.SpawnPiece();
+            board.SpawnPiece(128, 128, 32);
         }
         goto base;
     W:

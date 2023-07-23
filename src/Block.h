@@ -14,16 +14,6 @@ using namespace std;
 #define DOOR_BOTTOM bitset<4>(2) // 0 0 1 0
 #define DOOR_LEFT   bitset<4>(1) // 0 0 0 1
 
-#define BLOCK_CENTER       Vector2f(x, y)
-#define BLOCK_TOP          Vector2f(x, y - size)
-#define BLOCK_BOTTOM       Vector2f(x, y + size)
-#define BLOCK_LEFT         Vector2f(x - size, y)
-#define BLOCK_RIGHT        Vector2f(x + size, y)
-#define BLOCK_TOP_RIGHT    Vector2f(x + size, y - size)
-#define BLOCK_TOP_LEFT     Vector2f(x - size, y - size)
-#define BLOCK_BOTTOM_LEFT  Vector2f(x - size, y + size)
-#define BLOCK_BOTTOM_RIGHT Vector2f(x + size, y + size)
-
 /* ========================================================================== */
 /*                                 Class Block                                */
 /* ========================================================================== */

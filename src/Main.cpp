@@ -2,16 +2,15 @@
 /*                                   Headers                                  */
 /* ========================================================================== */
 #include "Board.h"
-#include "Piece.h"
+#include "Menu.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include <stdlib.h>
 
 // =============================================================================
 //                                 Game Start
 // =============================================================================
-int start()
+int main()
 {
     srand(time(NULL));
 
@@ -25,6 +24,7 @@ int start()
     RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
     Event        event;
     Board        board(ROWS, COLUMNS, BLOCK_SIZE, Vector2f(CENTER, CENTER));
+    board.SpawnPiece(128, 128, 32);
 
     while (window.isOpen())
     {
@@ -49,13 +49,4 @@ int start()
         window.display();
     }
     return EXIT_SUCCESS;
-}
-
-/* ========================================================================== */
-/*                                    Main                                    */
-/* ========================================================================== */
-int main()
-{
-    start();
-    return 0;
 }

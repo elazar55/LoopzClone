@@ -4,12 +4,11 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "Board.h"
-#include "Piece.h"
-#include <iostream>
 #include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <stdlib.h>
+#include <string>
+
+using namespace std;
+using namespace sf;
 
 // =============================================================================
 //                                 Class Menu
@@ -17,9 +16,16 @@
 class Menu
 {
     public:
+        Menu();
+        ~Menu();
+        void Input(Event& event);
+        bool SetFont(string font);
+        void Draw(RenderWindow& window);
+        void SetPosition(Vector2f position);
 
     private:
-        sf::Text new_game_text_;
+        Text new_game_text_;
+        Font font_;
 };
 
 #endif // MENU_H

@@ -6,81 +6,64 @@
 using namespace std;
 using namespace sf;
 
-/* ========================================================================== */
-/*                                 Constructor                                */
-/* ========================================================================== */
-Piece::Piece(float x, float y, float size)
-{
-    vector<Block> temp;
-    // 0
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 1
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_LEFT));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 2
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_RIGHT));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 3
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_LEFT | DOOR_TOP));
-    temp.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_RIGHT));
-    temp.push_back(Block(BLOCK_TOP_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
-    temp.push_back(Block(BLOCK_LEFT, size, DOOR_LEFT | DOOR_RIGHT));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 4
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_RIGHT | DOOR_TOP));
-    temp.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_LEFT));
-    temp.push_back(Block(BLOCK_TOP_LEFT, size, DOOR_RIGHT | DOOR_LEFT));
-    temp.push_back(Block(BLOCK_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 5
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_BOTTOM | DOOR_TOP));
-    temp.push_back(Block(BLOCK_BOTTOM, size, DOOR_BOTTOM | DOOR_TOP));
-    temp.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_TOP));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 6
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
-    temp.push_back(Block(BLOCK_TOP, size, DOOR_TOP | DOOR_BOTTOM));
-    temp.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_LEFT));
-    temp.push_back(Block(BLOCK_BOTTOM_LEFT, size, DOOR_LEFT | DOOR_RIGHT));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 7
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
-    temp.push_back(Block(BLOCK_TOP, size, DOOR_TOP | DOOR_BOTTOM));
-    temp.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_RIGHT));
-    temp.push_back(Block(BLOCK_BOTTOM_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 8
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
-    temp.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_RIGHT));
-    temp.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_RIGHT));
-    temp.push_back(Block(BLOCK_BOTTOM_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
-    temp.push_back(Block(BLOCK_TOP_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
-    ShapeRepo_.push_back(temp);
-    temp.clear();
-    // 9
-    temp.push_back(Block(BLOCK_CENTER, size, DOOR_TOP | DOOR_BOTTOM));
-    temp.push_back(Block(BLOCK_TOP, size, DOOR_BOTTOM | DOOR_LEFT));
-    temp.push_back(Block(BLOCK_BOTTOM, size, DOOR_TOP | DOOR_RIGHT));
-    temp.push_back(Block(BLOCK_BOTTOM_RIGHT, size, DOOR_LEFT | DOOR_RIGHT));
-    temp.push_back(Block(BLOCK_TOP_LEFT, size, DOOR_LEFT | DOOR_RIGHT));
-    ShapeRepo_.push_back(temp);
-    // temp.clear();
+// =============================================================================
+//                                 Piece Repo
+// =============================================================================
+vector<vector<Vector2f>> PieceRepo::shapes{
+    { BLOCK_CENTER }, // Single v1
+    { BLOCK_CENTER }, // Single v2
+    { BLOCK_CENTER }, // Single v3
+    { BLOCK_CENTER, BLOCK_TOP, BLOCK_BOTTOM }, // Line
+    { BLOCK_CENTER, BLOCK_BOTTOM_LEFT, BLOCK_BOTTOM, BLOCK_RIGHT }, // S
+    { BLOCK_CENTER, BLOCK_BOTTOM_RIGHT, BLOCK_BOTTOM, BLOCK_LEFT }, // Z
+    { BLOCK_CENTER, BLOCK_TOP, BLOCK_BOTTOM, BLOCK_BOTTOM_RIGHT }, // L
+    { BLOCK_CENTER, BLOCK_TOP, BLOCK_BOTTOM, BLOCK_BOTTOM_LEFT }, // J
+    { BLOCK_BOTTOM, BLOCK_TOP_LEFT, BLOCK_BOTTOM_LEFT, BLOCK_BOTTOM_RIGHT, // U
+      BLOCK_RIGHT, BLOCK_TOP_RIGHT, BLOCK_LEFT },
+    { BLOCK_CENTER, BLOCK_TOP_LEFT, BLOCK_TOP, BLOCK_BOTTOM, // Big Z
+      BLOCK_BOTTOM_RIGHT }
+};
+vector<vector<bitset<4>>> PieceRepo::doors{
+    { DOOR_VERT }, // Single v1
+    { DOOR_TOP | DOOR_LEFT }, // Single v2
+    { DOOR_TOP | DOOR_RIGHT }, // Single v3
+    { DOOR_VERT, DOOR_VERT, DOOR_VERT }, // Line
+    { DOOR_BOTTOM | DOOR_RIGHT, DOOR_HORZ, DOOR_LEFT | DOOR_TOP, // S
+      DOOR_HORZ },
+    { DOOR_BOTTOM | DOOR_LEFT, DOOR_HORZ, DOOR_RIGHT | DOOR_TOP, // Z
+      DOOR_HORZ },
+    { DOOR_VERT, DOOR_VERT, DOOR_TOP | DOOR_RIGHT, DOOR_HORZ }, // L
+    { DOOR_VERT, DOOR_VERT, DOOR_TOP | DOOR_LEFT, DOOR_HORZ }, // J
+    { DOOR_TOP | DOOR_RIGHT, DOOR_VERT, DOOR_VERT, DOOR_HORZ,   // U
+      DOOR_LEFT | DOOR_TOP, DOOR_VERT, DOOR_VERT, DOOR_VERT },
+    { DOOR_VERT, DOOR_HORZ, DOOR_LEFT | DOOR_BOTTOM, // Big Z
+      DOOR_TOP | DOOR_RIGHT, DOOR_HORZ }
+};
 
-    blocks_ = ShapeRepo_[RandomInt(ShapeRepo_.size())];
+// =============================================================================
+//                                Constructors
+// =============================================================================
+Piece::Piece()
+{
 }
 
-// -----------------------------------------------------------------------------
+// =============================================================================
+//
+// =============================================================================
+Piece::Piece(float x, float y, float size) : origin_(Vector2f(0, 0))
+{
+    int pieceIndex = RandomInt(PieceRepo::shapes.size());
+    for (size_t i = 0; i < PieceRepo::shapes[pieceIndex].size(); i++)
+    {
+        blocks_.push_back(Block(PieceRepo::shapes[pieceIndex][i], size,
+                                PieceRepo::doors[pieceIndex][i]));
+    }
+    move(Vector2f(x, y));
+}
+
+// =============================================================================
 //                                 Random Int
-// -----------------------------------------------------------------------------
+// =============================================================================
 int Piece::RandomInt(int max)
 {
     return rand() % max;
@@ -100,6 +83,7 @@ void Piece::draw(RenderWindow& window)
 void Piece::move(Vector2f direction)
 {
     for (auto&& i : blocks_) i.Move(direction);
+    origin_ += direction;
 }
 
 /* ========================================================================== */
@@ -107,9 +91,7 @@ void Piece::move(Vector2f direction)
 /* ========================================================================== */
 void Piece::rotate(float degrees)
 {
-    Vector2f origin = blocks_[0].Position();
-
-    for (auto&& i : blocks_) i.Rotate(degrees, origin);
+    for (auto&& i : blocks_) i.Rotate(degrees, origin_);
 }
 
 /* ========================================================================== */

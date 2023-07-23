@@ -10,15 +10,17 @@ using namespace std;
 using namespace sf;
 
 /* ========================================================================== */
-/*                             Empty Constructor                            */
+/*                             Default Constructor                            */
 /* ========================================================================== */
-Block::Block() : position_(Vector2f(FLT_MAX, FLT_MAX)), doors_{false} {}
+Block::Block() : position_(Vector2f(FLT_MAX, FLT_MAX)), doors_{ false }
+{
+}
 
 /* ========================================================================== */
 /*                             Custom Constructor                             */
 /* ========================================================================== */
 Block::Block(Vector2f pos, float size, const bitset<4> doors) :
-    position_(pos),
+    position_(pos * size),
     doors_(doors),
     shape_(Vector2f(size, size))
 {
@@ -89,7 +91,7 @@ void Block::Rotate(float degrees, const Vector2f& origin)
 
     shape_.setPosition(position_);
 
-    const bitset<4> matrix[4] = {1, 2, 4, 8};
+    const bitset<4> matrix[4] = { 1, 2, 4, 8 };
     bitset<4>       copy(doors_);
     assert(copy == doors_);
 
