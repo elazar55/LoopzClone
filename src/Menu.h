@@ -4,6 +4,7 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include "MenuItem.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 
@@ -19,13 +20,11 @@ class Menu
         Menu();
         ~Menu();
         void Input(Event& event);
-        bool SetFont(string font);
         void Draw(RenderWindow& window);
-        void SetPosition(Vector2f position);
+        void AddMenuItem(String key);
 
     private:
-        Text new_game_text_;
-        Font font_;
+        map<String, MenuItem> menuItems_;
 };
 
 #endif // MENU_H

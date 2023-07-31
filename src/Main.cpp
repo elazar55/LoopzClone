@@ -23,8 +23,8 @@ int main()
 
     RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
     Event        event;
-    Board        board(ROWS, COLUMNS, BLOCK_SIZE, Vector2f(CENTER, CENTER));
-    board.SpawnPiece(128, 128, 32);
+    Menu         mainMenu;
+    mainMenu.AddMenuItem("New Game");
 
     while (window.isOpen())
     {
@@ -42,10 +42,10 @@ int main()
                     default: break;
                 }
             }
-            board.Input(event);
+            mainMenu.Input(event);
         }
         window.clear();
-        board.Draw(window);
+        mainMenu.Draw(window);
         window.display();
     }
     return EXIT_SUCCESS;
