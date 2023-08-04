@@ -1,25 +1,27 @@
 # ============================================================================ #
 #                                   Variables                                  #
 # ============================================================================ #
-CPPFLAGS =#			Flags for the C preprocessor
-CXX      = g++#		Program for compiling C++ programs; default g++
-CC       = gcc#		Program for compiling C programs; default cc
-CXXFLAGS =-Wall -march=native -g3#	Flags for the C++ compiler
-ASM      = nasm#	Program for compiling ASM programs
-ASMFLAGS =-fwin64#	Flags for the ASM compiler
+CPPFLAGS	=#					Flags for the C preprocessor
+CXX			=	g++#			Program for compiling C++ programs; default g++
+CC			=	gcc#			Program for compiling C programs; default cc
+ASM			=	nasm#			Program for compiling ASM programs
+ASMFLAGS	=	-fwin64#		Flags for the ASM compiler
+CXXFLAGS	=	-Wall\
+				-march=native\
+				-g3#			Flags for the C++ compiler
+LDFLAGS		=	-lsfml-graphics\
+				-lsfml-window\
+				-lsfml-system#	Flags for compilers when they invoke the linker
 
-# Flags for compilers when they invoke the linker
-LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
-
-BUILD_DIR = build#							Directory where build files go
-SRC_DIR   = src#							Directory where the source files are
-CPP_SRCS  = $(wildcard $(SRC_DIR)/*.cpp)#	Finds all .cpp files in ./src/
-ASM_SRCS  = $(wildcard $(SRC_DIR)/*.asm)#	Finds all .cpp files in ./src/
+BUILD_DIR	=	build#							Directory where build files go
+SRC_DIR		=	src#							Source files directory
+CPP_SRCS	=	$(wildcard $(SRC_DIR)/*.cpp)#	Match all .cpp files in ./src/
+ASM_SRCS	=	$(wildcard $(SRC_DIR)/*.asm)#	Match all .asm files in ./src/
 
 # Replaces .cpp with .o and SRC_DIR with BUILD_DIR
-OBJS  = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(CPP_SRCS))
-OBJS += $(patsubst $(SRC_DIR)/%.asm,$(BUILD_DIR)/%.o,$(ASM_SRCS))
-DEPS  = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.d,$(CPP_SRCS))
+OBJS	=	$(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(CPP_SRCS))
+OBJS	+=	$(patsubst $(SRC_DIR)/%.asm,$(BUILD_DIR)/%.o,$(ASM_SRCS))
+DEPS	=	$(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.d,$(CPP_SRCS))
 
 ifeq ($(OS),Windows_NT)# Executable extension
 	EXT = .exe
@@ -43,6 +45,7 @@ $(EXE): $(BUILD_DIR) $(SRC_DIR) $(OBJS)
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
+# Same as above for assembly
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm
 	$(ASM) $(ASMFLAGS) -MD -MP $< -o $@
 
@@ -56,18 +59,25 @@ $(SRC_DIR):
 
 .PHONY: test
 test:
-	@printf "CPP Source files:\n"
+	@printf "\nOperating System: %s\n\n" $(OS)
+
+	@printf "CXXFLAGS: "
+	@printf "%s " $(CXXFLAGS)
+
+	@printf "\n\nCPP_SRCS:\n"
 	@printf "%s\n" $(CPP_SRCS)
-	@printf "\nASM Source files:\n"
+
+	@printf "\nASM_SRCS:\n"
 	@printf "%s\n" $(ASM_SRCS)
-	@printf "\nObject files:\n"
+
+	@printf "\nOBJS:\n"
 	@printf "%s\n" $(OBJS)
-	@printf "\nDepend files:\n"
+
+	@printf "\nDEPS:\n"
 	@printf "%s\n" $(DEPS)
-	@printf "\nExecutable:\n"
-	@printf "%s\n" $(EXE)
-	@printf "\nOperating System:\n"
-	@printf "%s\n" $(OS)
+
+	@printf "\nEXE: "
+	@printf "%s \n" $(EXE)
 
 .PHONY: clean
 clean:
