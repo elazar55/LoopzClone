@@ -4,7 +4,7 @@
 CPPFLAGS =#			Flags for the C preprocessor
 CXX      = g++#		Program for compiling C++ programs; default g++
 CC       = gcc#		Program for compiling C programs; default cc
-CXXFLAGS =-Wall#	Flags for the C++ compiler
+CXXFLAGS =-Wall -march=native -g3#	Flags for the C++ compiler
 ASM      = nasm#	Program for compiling ASM programs
 ASMFLAGS =-fwin64#	Flags for the ASM compiler
 
@@ -31,6 +31,7 @@ EXE = $(BUILD_DIR)/$(notdir $(shell pwd))$(EXT)
 # ============================================================================ #
 #                                 Build Targets                                #
 # ============================================================================ #
+.PHONY: all
 all: $(EXE)
 
 # Links all .o files in BUILD_DIR
@@ -48,11 +49,12 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm
 # Creates BUILD_DIR if it doesn't exist
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
-	
+
 # Creates SRC_DIR if it doesn't exist
 $(SRC_DIR):
 	mkdir $(SRC_DIR)
 
+.PHONY: test
 test:
 	@printf "CPP Source files:\n"
 	@printf "%s\n" $(CPP_SRCS)
@@ -67,6 +69,7 @@ test:
 	@printf "\nOperating System:\n"
 	@printf "%s\n" $(OS)
 
+.PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)/
 
