@@ -31,8 +31,10 @@ void ComputedGotoTest(RenderWindow& window, Board& board)
     while (window.pollEvent(event))
     {
         clock.restart();
-        if (event.type == sf::Event::Closed) window.close();
-        if (event.type == event.KeyPressed) goto* table[event.key.code];
+        if (event.type == sf::Event::Closed)
+            window.close();
+        if (event.type == event.KeyPressed)
+            goto* table[event.key.code];
         break;
 
     Escape:
@@ -79,12 +81,12 @@ void ComputedGotoTest(RenderWindow& window, Board& board)
 // =============================================================================
 //                                  ASM Test
 // =============================================================================
-extern "C" void AsmTest()
-{
-    int assembly(int x, int y);
-    int i = assembly(6, 4);
-    cout << i << endl;
-}
+// extern "C" void AsmTest()
+// {
+//     int assembly(int x, int y);
+//     int i = assembly(6, 4);
+//     cout << i << endl;
+// }
 
 // =============================================================================
 //                                Callback Test
@@ -93,4 +95,16 @@ template<typename T, typename... Args>
 void CallbackTest(void (T::*func)(Args...), T& object, Args... args)
 {
     (object.*func)(args...);
+}
+
+// =============================================================================
+//                            In-Register Shuffles
+// =============================================================================
+void popcnt()
+{
+    char counts[256]{};
+
+    for (int m = 0; m < 256; m++)
+        for (int i = 0; i < 8; i++)
+            counts[m] += (m >> i & 1);
 }

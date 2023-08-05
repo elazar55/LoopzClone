@@ -4,8 +4,6 @@
 CPPFLAGS	=#					Flags for the C preprocessor
 CXX			=	g++#			Program for compiling C++ programs; default g++
 CC			=	gcc#			Program for compiling C programs; default cc
-ASM			=	nasm#			Program for compiling ASM programs
-ASMFLAGS	=	-fwin64#		Flags for the ASM compiler
 CXXFLAGS	=	-Wall\
 				-march=native\
 				-g3#			Flags for the C++ compiler
@@ -13,15 +11,13 @@ LDFLAGS		=	-lsfml-graphics\
 				-lsfml-window\
 				-lsfml-system#	Flags for compilers when they invoke the linker
 
-BUILD_DIR	=	build#							Directory where build files go
+BUILD_DIR	=	build#							Build directory
 SRC_DIR		=	src#							Source files directory
-CPP_SRCS	=	$(wildcard $(SRC_DIR)/*.cpp)#	Match all .cpp files in ./src/
-ASM_SRCS	=	$(wildcard $(SRC_DIR)/*.asm)#	Match all .asm files in ./src/
+CPP_FILES	=	$(wildcard $(SRC_DIR)/*.cpp)#	Match all .cpp files in ./src/
 
-# Replaces .cpp with .o and SRC_DIR with BUILD_DIR
-OBJS	=	$(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(CPP_SRCS))
-OBJS	+=	$(patsubst $(SRC_DIR)/%.asm,$(BUILD_DIR)/%.o,$(ASM_SRCS))
-DEPS	=	$(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.d,$(CPP_SRCS))
+# Generate build file list with string substitution
+OBJS	=	$(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(CPP_FILES))
+DEPS	=	$(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.d,$(CPP_FILES))
 
 ifeq ($(OS),Windows_NT)# Executable extension
 	EXT = .exe
@@ -36,19 +32,24 @@ EXE = $(BUILD_DIR)/$(notdir $(shell pwd))$(EXT)
 .PHONY: all
 all: $(EXE)
 
+# ============================================================================ #
+#                                  Executable                                  #
+# ============================================================================ #
 # Links all .o files in BUILD_DIR
 $(EXE): $(BUILD_DIR) $(SRC_DIR) $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
+# ============================================================================ #
+#                                 Object Files                                 #
+# ============================================================================ #
 # Compiles every source file into .o files and generates dependency files to
 # trigger recompilation if headers change.
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
-# Same as above for assembly
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm
-	$(ASM) $(ASMFLAGS) -MD -MP $< -o $@
-
+# ============================================================================ #
+#                                  Directories                                 #
+# ============================================================================ #
 # Creates BUILD_DIR if it doesn't exist
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
@@ -57,18 +58,22 @@ $(BUILD_DIR):
 $(SRC_DIR):
 	mkdir $(SRC_DIR)
 
+# ============================================================================ #
+#                                Print Variables                               #
+# ============================================================================ #
 .PHONY: test
 test:
-	@printf "\nOperating System: %s\n\n" $(OS)
+	@printf "OS: %s\n" $(OS)
+	@printf "EXE: %s\n" $(EXE)
 
 	@printf "CXXFLAGS: "
 	@printf "%s " $(CXXFLAGS)
 
-	@printf "\n\nCPP_SRCS:\n"
-	@printf "%s\n" $(CPP_SRCS)
+	@printf "\nLDFLAGS: "
+	@printf "%s " $(LDFLAGS)
 
-	@printf "\nASM_SRCS:\n"
-	@printf "%s\n" $(ASM_SRCS)
+	@printf "\n\nCPP_FILES:\n"
+	@printf "%s\n" $(CPP_FILES)
 
 	@printf "\nOBJS:\n"
 	@printf "%s\n" $(OBJS)
@@ -76,13 +81,16 @@ test:
 	@printf "\nDEPS:\n"
 	@printf "%s\n" $(DEPS)
 
-	@printf "\nEXE: "
-	@printf "%s \n" $(EXE)
-
+# ============================================================================ #
+#                                     Clean                                    #
+# ============================================================================ #
 .PHONY: clean
 clean:
-	rm -rf $(BUILD_DIR)/
+	rm -rf $(BUILD_DIR)/*
 
+# ============================================================================ #
+#                                 Dependencies                                 #
+# ============================================================================ #
 # Include the .d makefiles. The - at the front suppresses the errors of missing
 # Makefiles. Initially, all the .d files will be missing, and we don't want
 # those errors to show up
