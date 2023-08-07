@@ -6,6 +6,7 @@ CXX      = g++#             Program for compiling C++ programs; default g++
 CC       = gcc#             Program for compiling C programs; default cc
 CXXFLAGS = -Wall\
            -march=native\
+		   -fno-diagnostics-show-caret\
            -g#              Flags for the C++ compiler
 LDFLAGS  = -lsfml-graphics\
            -lsfml-window\
@@ -21,8 +22,8 @@ OBJS = $(CPP_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPS = $(CPP_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.d)
 
 # Get just the object file paths so you can create them in advance
-OBJ_DIRS :=$(patsubst %/,%,$(dir $(OBJS)))
-OBJ_DIRS :=$(filter-out $(BUILD_DIR), $(OBJ_DIRS))
+OBJ_DIRS := $(patsubst %/,%,$(dir $(OBJS)))
+OBJ_DIRS := $(sort $(OBJ_DIRS))# Remove duplicates
 
 # Append executable extension for Windows
 ifeq ($(OS),Windows_NT)
@@ -33,28 +34,25 @@ endif
 EXE = $(BUILD_DIR)/$(notdir $(shell pwd))$(EXT)
 
 .PHONY: all
-all: $(BUILD_DIR) $(SRC_DIR) $(OBJ_DIRS) $(EXE)
+all: directories $(EXE)
+
+# Create directories if they don't exist
+.PHONY: directories
+directories: $(SRC_DIR) $(OBJ_DIRS)
+
+$(SRC_DIR):
+	mkdir $@
+$(OBJ_DIRS):
+	mkdir $@
+
+# Compile sources into obj and create dependency files to cause recompilation if
+# headers change.
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
 # Links all .o files
 $(EXE): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
-
-# Compiles every source file into .o files and generates dependency files to
-# trigger recompilation if headers change.
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
-
-# Creates BUILD_DIR if it doesn't exist
-$(BUILD_DIR):
-	mkdir $(BUILD_DIR)
-
-# Creates SRC_DIR if it doesn't exist
-$(SRC_DIR):
-	mkdir $(SRC_DIR)
-
-# Creates OBJ_DIRS if they don't exist
-$(OBJ_DIRS):
-	mkdir $(OBJ_DIRS)
+	@$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 .PHONY: test
 test:
@@ -83,7 +81,6 @@ test:
 clean:
 	rm -rf $(BUILD_DIR)/*
 
-# Include the .d makefiles. The - at the front suppresses the errors of missing
-# Makefiles. Initially, all the .d files will be missing, and we don't want
-# those errors to show up
+# Include .d files. The - in front mutes errors of missing makefiles. At first,
+# all .d files are missing and we don't want those errors to pop up
 -include $(DEPS)
