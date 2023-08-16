@@ -74,7 +74,7 @@ void Block::Move(Vector2f direction)
 /*                                   Rotate                                   */
 /* ========================================================================== */
 void Block::Rotate(float degrees, const Vector2f& origin)
-{
+{ // TODO: Return new pos
     const double PI       = 3.141592653589793238;
     double       radians  = degrees * PI / 180.f;
     double       sinTheta = std::round(std::sin(radians));
@@ -172,7 +172,8 @@ int Block::Dot(T v1, T v2, size_t length)
 {
     int result{};
 
-    for (size_t i = 0; i < length; i++) result += (v1[i] * v2[i]);
+    for (size_t i = 0; i < length; i++)
+        result += (v1[i] * v2[i]);
 
     return result;
 }

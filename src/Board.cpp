@@ -80,6 +80,18 @@ bool Board::PushPiece()
     {
         Vector2i index = BlockIndex(i.Position(), i.Size());
 
+        if (index.x + 1 == columns_ && i.Doors()[2]) // Right
+            return EXIT_FAILURE;
+
+        else if (index.y + 1 == rows_ && i.Doors()[1]) // Bottom
+            return EXIT_FAILURE;
+
+        else if (index.x == 0 && i.Doors()[0]) // Left
+            return EXIT_FAILURE;
+
+        else if (index.y == 0 && i.Doors()[3]) // Top
+            return EXIT_FAILURE;
+
         if (!InBounds(index))
         {
             return EXIT_FAILURE;
@@ -189,6 +201,7 @@ void Board::Input(Event& event)
                         delete indices;
                     }
                     SpawnPiece(128, 128, 32);
+                    cout << EXIT_SUCCESS << endl;
                 }
                 break;
             default: break;
@@ -219,10 +232,12 @@ vector<Vector2i>* Board::CheckLoop()
 
     grid_[index.x][index.y].SetColor(Color::Cyan);
 
-    do {
+    do
+    {
         Block& block = grid_[index.x][index.y];
         checkedIndices.push_back(index);
-        if (direction.any()) block.SetColor(sf::Color::Green);
+        if (direction.any())
+            block.SetColor(sf::Color::Green);
 
         /* =========================== Checks top =========================== */
         if (block.Doors()[Block::Door::TOP_INDEX] && direction != DOOR_BOTTOM &&
