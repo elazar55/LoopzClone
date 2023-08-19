@@ -133,8 +133,17 @@ void Board::MovePiece(Vector2f direction)
 /*                                Rotate Piece                                */
 /* ========================================================================== */
 void Board::RotatePiece(float angle)
-{
+{ // TODO: Wall kick
     piece_.rotate(angle);
+
+    for (auto&& i : piece_.Blocks())
+    {
+        if (!InBounds(BlockIndex(i.Position(), i.Size())))
+        {
+            piece_.rotate(-angle);
+            break;
+        }
+    }
 }
 
 /* ========================================================================== */
@@ -236,8 +245,7 @@ vector<Vector2i>* Board::CheckLoop()
     {
         Block& block = grid_[index.x][index.y];
         checkedIndices.push_back(index);
-        if (direction.any())
-            block.SetColor(sf::Color::Green);
+        if (direction.any()) block.SetColor(sf::Color::Green);
 
         /* =========================== Checks top =========================== */
         if (block.Doors()[Block::Door::TOP_INDEX] && direction != DOOR_BOTTOM &&

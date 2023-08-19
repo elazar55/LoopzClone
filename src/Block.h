@@ -24,7 +24,7 @@ class Block
         bitset<4>      doors_;
         RectangleShape shape_;
 
-    public: // TODO: Extract Door to a class
+    public:
         enum Door
         {
             LEFT_INDEX,
@@ -33,17 +33,17 @@ class Block
             TOP_INDEX,
         };
 
-        // -------------------------- Constructors -----------------------------
+        // ========================== Constructors =============================
         Block();
         Block(Vector2f pos, float size, const bitset<4> doors = bitset<4>(0));
 
-        // --------------------------- Inspectors ------------------------------
+        // =========================== Inspectors ==============================
         Vector2f  Position() const;
         bool      IsEmpty() const;
         bitset<4> Doors() const;
         Vector2f  Size() const;
 
-        // ---------------------------- Mutators -------------------------------
+        // ============================ Mutators ===============================
         void SetDoors(bitset<4> doors);
         void Move(Vector2f direction);
         void Rotate(float degrees, const Vector2f& origin);
