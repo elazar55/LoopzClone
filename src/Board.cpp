@@ -61,10 +61,7 @@ Vector2i Board::BlockIndex(Vector2f block_pos, Vector2f block_size) const
 /* ========================================================================== */
 bool Board::InBounds(Vector2i index) const
 {
-    int columns = grid_.size();
-    int rows    = grid_.back().size();
-
-    if (index.x >= columns || index.y >= rows || index.x < 0 || index.y < 0)
+    if (index.x >= columns_ || index.y >= rows_ || index.x < 0 || index.y < 0)
         return false;
 
     return true;
@@ -133,14 +130,29 @@ void Board::MovePiece(Vector2f direction)
 /*                                Rotate Piece                                */
 /* ========================================================================== */
 void Board::RotatePiece(float angle)
-{ // TODO: Wall kick
+{
     piece_.rotate(angle);
 
     for (auto&& i : piece_.Blocks())
     {
-        if (!InBounds(BlockIndex(i.Position(), i.Size())))
+        if (i.Position().x <= 0)
         {
-            piece_.rotate(-angle);
+            piece_.move(Vector2f(i.Size().x, 0));
+            break;
+        }
+        else if (BlockIndex(i.Position(), i.Size()).x >= columns_)
+        {
+            piece_.move(Vector2f(-i.Size().x, 0));
+            break;
+        }
+        else if (BlockIndex(i.Position(), i.Size()).y >= rows_)
+        {
+            piece_.move(Vector2f(0, -i.Size().y));
+            break;
+        }
+        else if (i.Position().y <= 0)
+        {
+            piece_.move(Vector2f(0, i.Size().y));
             break;
         }
     }
