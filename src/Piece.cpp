@@ -34,8 +34,8 @@ vector<vector<bitset<4>>> PieceRepo::doors{
       DOOR_HORZ },
     { DOOR_VERT, DOOR_VERT, DOOR_TOP | DOOR_RIGHT, DOOR_HORZ }, // L
     { DOOR_VERT, DOOR_VERT, DOOR_TOP | DOOR_LEFT, DOOR_HORZ }, // J
-    { DOOR_TOP | DOOR_RIGHT, DOOR_VERT, DOOR_VERT, DOOR_HORZ,   // U
-      DOOR_LEFT | DOOR_TOP, DOOR_VERT, DOOR_VERT, DOOR_VERT },
+    { DOOR_HORZ, DOOR_VERT, DOOR_TOP | DOOR_RIGHT, DOOR_LEFT | DOOR_TOP, // U
+      DOOR_VERT, DOOR_VERT, DOOR_VERT, DOOR_VERT },
     { DOOR_VERT, DOOR_HORZ, DOOR_LEFT | DOOR_BOTTOM, // Big Z
       DOOR_TOP | DOOR_RIGHT, DOOR_HORZ }
 };
@@ -43,7 +43,9 @@ vector<vector<bitset<4>>> PieceRepo::doors{
 // =============================================================================
 //                                Constructors
 // =============================================================================
-Piece::Piece() {}
+Piece::Piece()
+{
+}
 
 // =============================================================================
 //
@@ -72,7 +74,8 @@ int Piece::RandomInt(int max)
 /* ========================================================================== */
 void Piece::draw(RenderWindow& window)
 {
-    for (auto& i : blocks_) i.Draw(window);
+    for (auto& i : blocks_)
+        i.Draw(window);
 }
 
 /* ========================================================================== */
@@ -80,7 +83,8 @@ void Piece::draw(RenderWindow& window)
 /* ========================================================================== */
 void Piece::move(Vector2f direction)
 {
-    for (auto&& i : blocks_) i.Move(direction);
+    for (auto&& i : blocks_)
+        i.Move(direction);
     origin_ += direction;
 }
 
@@ -89,7 +93,8 @@ void Piece::move(Vector2f direction)
 /* ========================================================================== */
 void Piece::rotate(float degrees)
 {
-    for (auto&& i : blocks_) i.Rotate(degrees, origin_);
+    for (auto&& i : blocks_)
+        i.Rotate(degrees, origin_);
 }
 
 /* ========================================================================== */
@@ -98,7 +103,8 @@ void Piece::rotate(float degrees)
 vector<Vector2f> Piece::Positions() const
 {
     vector<Vector2f> positions;
-    for (auto& i : blocks_) positions.push_back(i.Position());
+    for (auto& i : blocks_)
+        positions.push_back(i.Position());
 
     return positions;
 }

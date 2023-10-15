@@ -11,6 +11,7 @@
 //                                 Game Start
 // =============================================================================
 int main()
+
 {
     srand(time(NULL));
 
@@ -24,7 +25,7 @@ int main()
     RenderWindow window(VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML works!");
     Event        event;
     Board        board(ROWS, COLUMNS, BLOCK_SIZE, Vector2f(CENTER, CENTER));
-    board.SpawnPiece(32 * 9, 32 * 3, BLOCK_SIZE);
+    board.SpawnPiece(BLOCK_SIZE * 9, BLOCK_SIZE * 4, BLOCK_SIZE);
     Menu mainMenu;
     mainMenu.AddMenuItem("New Game");
 

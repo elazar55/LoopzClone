@@ -222,7 +222,6 @@ void Board::Input(Event& event)
                         delete indices;
                     }
                     SpawnPiece(128, 128, 32);
-                    cout << EXIT_SUCCESS << endl;
                 }
                 break;
             default: break;
