@@ -15,15 +15,10 @@ LDFLAGS  = -lsfml-graphics\
 BUILD_DIR  = build#                           Build directory
 SRC_DIR    = src#                             Source files directory
 CPP_FILES  = $(wildcard $(SRC_DIR)/*.cpp)#    Match all .cpp files in ./src/
-CPP_FILES += $(wildcard $(SRC_DIR)/**/*.cpp)# Match all .cpp files in ./src/**
 
 # Generate build file list with string substitution
 OBJS = $(CPP_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 DEPS = $(CPP_FILES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.d)
-
-# Get just the object file paths so you can create them in advance
-OBJ_DIRS := $(patsubst %/,%,$(dir $(OBJS)))
-OBJ_DIRS := $(sort $(OBJ_DIRS))# Remove duplicates
 
 # Append executable extension for Windows
 ifeq ($(OS),Windows_NT)
@@ -33,27 +28,23 @@ endif
 # Final executable target which is the name of the parent folder + $(BUILD_DIR)
 EXE = $(BUILD_DIR)/$(notdir $(shell pwd))$(EXT)
 
+# ============================================================================ #
+#                                    Targets                                   #
+# ============================================================================ #
+
 .PHONY: all
-all: directories $(EXE)
+all: $(EXE)
 
-# Create directories if they don't exist
-.PHONY: directories
-directories: $(SRC_DIR) $(OBJ_DIRS)
-
-$(SRC_DIR):
-	mkdir $@
-$(OBJ_DIRS):
-	mkdir $@
-
-# Compile sources into obj and create dependency files to cause recompilation if
-# headers change.
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
-
-# Links all .o files
+# Link all .o files
 $(EXE): $(OBJS)
-	@$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
+# Compile sources into obj and create .d files to recompile if headers change
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
+
+# Testing
 .PHONY: test
 test:
 	@printf "OS: %s\n" $(OS)
@@ -73,9 +64,6 @@ test:
 
 	@printf "\nDEPS:\n"
 	@printf "%s\n" $(DEPS)
-
-	@printf "\nOBJ_DIRS:\n"
-	@printf "%s\n" $(OBJ_DIRS)
 
 .PHONY: clean
 clean:
